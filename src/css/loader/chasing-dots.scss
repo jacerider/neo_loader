@@ -1,0 +1,49 @@
+.neo-loader-style.neo-loader-chasing-dots {
+  @apply text-center;
+  animation: neo-chasingDotsRotate 2s infinite linear;
+}
+
+.neo-loader-style.neo-loader-chasing-dots .neo-loader-child {
+  @apply absolute top-0 inline-block rounded-full;
+  width: 60%;
+  height: 60%;
+  animation: neo-chasingDotsBounce 2s infinite ease-in-out;
+  background-color: rgb(var(--loader-text));
+}
+
+.neo-loader-style.neo-loader-chasing-dots .neo-loader-dot2 {
+  @apply bottom-0 top-auto;
+  animation-delay: -1s;
+}
+
+@-webkit-keyframes neo-chasingDotsRotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes neo-chasingDotsRotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@-webkit-keyframes neo-chasingDotsBounce {
+  0%,
+  100% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1);
+  }
+}
+
+@keyframes neo-chasingDotsBounce {
+  0%,
+  100% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1);
+  }
+}

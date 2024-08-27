@@ -1,0 +1,29 @@
+.neo-loader-style.neo-loader-double-bounce .neo-loader-child {
+  @apply absolute left-0 top-0 h-full w-full rounded-full opacity-60;
+  animation: neo-doubleBounce 2s infinite ease-in-out;
+  background-color: rgb(var(--loader-text));
+}
+
+.neo-loader-style.neo-loader-double-bounce .neo-loader-double-bounce2 {
+  animation-delay: -1s;
+}
+
+@-webkit-keyframes neo-doubleBounce {
+  0%,
+  100% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1);
+  }
+}
+
+@keyframes neo-doubleBounce {
+  0%,
+  100% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1);
+  }
+}

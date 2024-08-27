@@ -1,0 +1,60 @@
+.neo-loader {
+  @apply inline-flex flex-col items-center justify-center gap-3 rounded p-4 text-xs;
+  background-color: rgb(var(--loader-bg));
+  color: rgb(var(--loader-text));
+
+  .neo-loader-title {
+    @apply mt-2 text-xs font-bold uppercase leading-none;
+  }
+
+  .neo-loader-style {
+    @apply relative h-10 min-w-10;
+  }
+}
+
+.ajax-progress {
+  &.ajax-progress-throbber {
+    @apply opacity-0 transition-opacity;
+
+    .neo-loader {
+      @apply flex-row;
+    }
+
+    &.active {
+      @apply opacity-100;
+    }
+  }
+
+  .ajax-progress-wrapper & {
+    @apply absolute left-0 top-0 flex h-full w-full items-center justify-center;
+    background-color: rgb(var(--loader-bg) / 0.5);
+
+    .neo-loader {
+      @apply sticky bottom-displace-b top-displace-t bg-transparent p-2;
+    }
+  }
+
+  &.ajax-progress-fullscreen {
+    @apply fixed left-0 z-50 flex h-full w-full flex-col items-center bg-base-900/50 opacity-0 transition-all;
+    top: var(--drupal-displace-offset-top);
+    right: var(--drupal-displace-offset-right);
+    bottom: var(--drupal-displace-offset-bottom);
+    left: var(--drupal-displace-offset-left);
+
+    .neo-loader {
+      @apply -translate-y-full rounded-t-none transition-transform;
+    }
+
+    &.active {
+      @apply opacity-100 duration-300;
+
+      .neo-loader {
+        @apply translate-y-0 duration-300;
+      }
+    }
+  }
+}
+
+.ajax-progress-wrapper {
+  @apply relative;
+}

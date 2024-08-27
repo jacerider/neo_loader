@@ -1,0 +1,23 @@
+{
+  "name": "jacerider/neo_loader",
+  "description": "Provides loading throbbers.",
+  "type": "drupal-module",
+  "license": "proprietary",
+  "homepage": "https://github.com/jacerider/neo_loader",
+  "authors": [
+    {
+      "name": "Cyle Carlson (JaceRider)",
+      "email": "jacerider@gmail.com",
+      "role": "Maintainer"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/jacerider/neo_loader/issues",
+    "source": "https://github.com/jacerider/neo_loader"
+  },
+  "minimum-stability": "dev",
+  "require": {
+    "drupal/core": "^10.3",
+    "jacerider/neo": "^1"
+  }
+}

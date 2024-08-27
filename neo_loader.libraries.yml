@@ -1,0 +1,19 @@
+loader:
+  version: VERSION
+  neo: { group: contrib }
+  css:
+    component:
+      src/css/loader.scss: {}
+  js:
+    src/js/loader.ts: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+
+ajax:
+  version: VERSION
+  neo: { group: contrib }
+  js:
+    src/js/loader.ajax.js: {}
+  dependencies:
+    - neo_loader/loader

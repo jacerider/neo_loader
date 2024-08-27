@@ -1,0 +1,6 @@
+loader: wave
+hide_ajax_message: false
+always_fullscreen: true
+show_admin_paths: true
+loader_position: body
+color: base-900

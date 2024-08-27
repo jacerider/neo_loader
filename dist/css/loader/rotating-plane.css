@@ -1,0 +1,1 @@
+.neo-loader-style.neo-loader-rotating-plane{animation:neo-rotatePlane 1.2s infinite ease-in-out;background-color:rgb(var(--loader-text))}@keyframes neo-rotatePlane{0%{transform:perspective(120px) rotateX(0) rotateY(0)}50%{transform:perspective(120px) rotateX(-180.1deg) rotateY(0)}to{transform:perspective(120px) rotateX(-180deg) rotateY(-179.9deg)}}

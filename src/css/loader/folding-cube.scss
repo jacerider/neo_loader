@@ -1,0 +1,78 @@
+.neo-loader-style.neo-loader-folding-cube {
+  @apply m-2;
+  transform: rotateZ(45deg);
+}
+
+.neo-loader-style.neo-loader-folding-cube .neo-loader-cube {
+  @apply relative float-left h-1/2 w-1/2;
+  position: relative;
+  transform: scale(1.1);
+}
+
+.neo-loader-style.neo-loader-folding-cube .neo-loader-cube:before {
+  @apply absolute left-0 top-0 h-full w-full;
+  animation: neo-foldCubeAngle 2.4s infinite linear both;
+  background-color: rgb(var(--loader-text));
+  content: '';
+  transform-origin: 100% 100%;
+}
+
+.neo-loader-style.neo-loader-folding-cube .neo-loader-cube2 {
+  transform: scale(1.1) rotateZ(90deg);
+}
+
+.neo-loader-style.neo-loader-folding-cube .neo-loader-cube3 {
+  transform: scale(1.1) rotateZ(180deg);
+}
+
+.neo-loader-style.neo-loader-folding-cube .neo-loader-cube4 {
+  transform: scale(1.1) rotateZ(270deg);
+}
+
+.neo-loader-style.neo-loader-folding-cube .neo-loader-cube2:before {
+  animation-delay: 0.3s;
+}
+
+.neo-loader-style.neo-loader-folding-cube .neo-loader-cube3:before {
+  animation-delay: 0.6s;
+}
+
+.neo-loader-style.neo-loader-folding-cube .neo-loader-cube4:before {
+  animation-delay: 0.9s;
+}
+
+@-webkit-keyframes neo-foldCubeAngle {
+  0%,
+  10% {
+    opacity: 0;
+    transform: perspective(140px) rotateX(-180deg);
+  }
+  25%,
+  75% {
+    opacity: 1;
+    transform: perspective(140px) rotateX(0deg);
+  }
+  90%,
+  100% {
+    opacity: 0;
+    transform: perspective(140px) rotateY(180deg);
+  }
+}
+
+@keyframes neo-foldCubeAngle {
+  0%,
+  10% {
+    opacity: 0;
+    transform: perspective(140px) rotateX(-180deg);
+  }
+  25%,
+  75% {
+    opacity: 1;
+    transform: perspective(140px) rotateX(0deg);
+  }
+  90%,
+  100% {
+    opacity: 0;
+    transform: perspective(140px) rotateY(180deg);
+  }
+}

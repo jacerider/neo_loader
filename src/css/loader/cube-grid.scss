@@ -1,0 +1,67 @@
+.neo-loader-style.neo-loader-cube-grid {
+  position: inherit;
+}
+
+.neo-loader-style.neo-loader-cube-grid .neo-loader-cube {
+  @apply float-left h-1/3 w-1/3;
+  animation: neo-cubeGridScaleDelay 1.3s infinite ease-in-out;
+  background-color: rgb(var(--loader-text));
+}
+
+.neo-loader-style.neo-loader-cube-grid .neo-loader-cube1 {
+  animation-delay: 0.2s;
+}
+
+.neo-loader-style.neo-loader-cube-grid .neo-loader-cube2 {
+  animation-delay: 0.3s;
+}
+
+.neo-loader-style.neo-loader-cube-grid .neo-loader-cube3 {
+  animation-delay: 0.4s;
+}
+
+.neo-loader-style.neo-loader-cube-grid .neo-loader-cube4 {
+  animation-delay: 0.1s;
+}
+
+.neo-loader-style.neo-loader-cube-grid .neo-loader-cube5 {
+  animation-delay: 0.2s;
+}
+
+.neo-loader-style.neo-loader-cube-grid .neo-loader-cube6 {
+  animation-delay: 0.3s;
+}
+
+.neo-loader-style.neo-loader-cube-grid .neo-loader-cube7 {
+  animation-delay: 0s;
+}
+
+.neo-loader-style.neo-loader-cube-grid .neo-loader-cube8 {
+  animation-delay: 0.1s;
+}
+
+.neo-loader-style.neo-loader-cube-grid .neo-loader-cube9 {
+  animation-delay: 0.2s;
+}
+
+@-webkit-keyframes neo-cubeGridScaleDelay {
+  0%,
+  70%,
+  100% {
+    transform: scale3D(1.1, 1.1, 1.1);
+  }
+  35% {
+    transform: scale3D(0, 0, 1.1);
+  }
+}
+
+@keyframes neo-cubeGridScaleDelay {
+  0%,
+  70%,
+  100% {
+    transform: scale3D(1.1, 1.1, 1.1);
+  }
+  35% {
+    transform: scale3D(0, 0, 1.1);
+  }
+}

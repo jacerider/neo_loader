@@ -1,0 +1,108 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for eXo loader module.
+ */
+
+use Drupal\Core\Render\Markup;
+
+/**
+ * Implements hook_theme().
+ */
+function neo_loader_theme($existing, $type, $theme, $path) {
+  $themes = [];
+  $themes['neo_loader'] = [
+    'variables' => [
+      'loader' => 'chasing_dots',
+      'title' => '',
+      'content' => [],
+      'attributes' => [],
+    ],
+  ];
+  return $themes;
+}
+
+/**
+ * Implements hook_library_info_build().
+ */
+function neo_loader_library_info_build() {
+  $libraries = [];
+  /** @var \Drupal\neo_loader\LoaderManagerInterface $loader_manager */
+  $loader_manager = \Drupal::service('plugin.manager.neo_loader');
+  foreach ($loader_manager->createInstances() as $loaderId => $instance) {
+    $libraries['plugin.' . str_replace('_', '-', $loaderId)] = [
+      'neo' => [
+        'group' => 'contrib',
+      ],
+      'css' => [
+        'base' => [
+          $instance->getCssFile() => [],
+        ],
+      ],
+    ];
+  }
+  return $libraries;
+}
+
+/**
+ * Implements hook_library_info_alter().
+ */
+function neo_loader_library_info_alter(&$libraries, $module) {
+  if ($module == 'core') {
+    $libraries['drupal.ajax']['js']['/' . \Drupal::service('extension.list.module')->getPath('neo_loader') . '/dist/js/loader.ajax.js'] = [];
+    $libraries['drupal.ajax']['dependencies'][] = 'neo_loader/loader';
+  }
+  if ($module == 'neo_loader') {
+    /** @var \Drupal\neo_loader\Settings\Settings $settings */
+    $settings = \Drupal::service('neo_loader.settings')->getActive();
+    if ($loaderId = $settings->getValue('loader')) {
+      $libraries['loader']['dependencies'][] = 'neo_loader/plugin.' . str_replace('_', '-', $loaderId);
+    }
+  }
+}
+
+/**
+ * Implements hook_page_attachments().
+ */
+function neo_loader_page_attachments(array &$page) {
+  /** @var \Drupal\neo_loader\Settings\Settings $settings */
+  $settings = \Drupal::service('neo_loader.settings')->getActive();
+  if (($loaderId = $settings->getValue('loader')) && $settings->routeIsApplicable()) {
+    /** @var \Drupal\Core\Render\Renderer $renderer */
+    $renderer = \Drupal::service('renderer');
+    $build = [
+      '#theme' => 'neo_loader',
+      '#loader' => $loaderId,
+    ];
+    $settings = [
+      'markup' => $renderer->render($build),
+      'hideAjaxMessage' => $settings->getValue('hide_ajax_message'),
+      'alwaysFullscreen' => $settings->getValue('always_fullscreen'),
+      'loaderPosition' => $settings->getValue('loader_position'),
+    ];
+    $page['#attached']['drupalSettings']['neoLoader'] = $settings;
+    $page['#attached']['library'][] = 'neo_loader/loader';
+  }
+}
+
+/**
+ * Prepares variables for eXo loader templates.
+ *
+ * Default template: neo-loader.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the icon
+ *   - attributes: HTML attributes for the containing element.
+ */
+function template_preprocess_neo_loader(array &$variables) {
+  $variables['attributes']['class'][] = 'neo-loader';
+  /** @var \Drupal\neo_loader\LoaderManagerInterface $loader_manager */
+  $loader_manager = \Drupal::service('plugin.manager.neo_loader');
+  if ($loader_manager->hasDefinition($variables['loader'])) {
+    $instance = $loader_manager->createInstance($variables['loader']);
+    $variables['content']['#attached']['library'][] = 'neo_loader/plugin.' . str_replace('_', '-', $variables['loader']);
+    $variables['content']['loader']['#markup'] = Markup::create($instance->getMarkup());
+  }
+}

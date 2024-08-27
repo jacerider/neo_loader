@@ -1,0 +1,12 @@
+services:
+  plugin.manager.neo_loader:
+    class: Drupal\neo_loader\LoaderManager
+    parent: default_plugin_manager
+  neo_loader.settings:
+    parent: neo_settings.repository
+    arguments: ['neo_loader']
+  neo_loader.neo_build_inline_event_subscriber:
+    class: '\Drupal\neo_loader\EventSubscriber\NeoBuildInlineEventSubscriber'
+    arguments: ['@neo_loader.settings']
+    tags:
+      - { name: 'event_subscriber' }

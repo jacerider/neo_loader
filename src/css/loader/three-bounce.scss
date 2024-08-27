@@ -1,0 +1,39 @@
+.neo-loader-style.neo-loader-three-bounce {
+  @apply h-5 w-20 text-center;
+}
+
+.neo-loader-style.neo-loader-three-bounce .neo-loader-child {
+  @apply inline-block h-5 w-5 rounded-full;
+  animation: neo-three-bounce 1.4s ease-in-out 0s infinite both;
+  background-color: rgb(var(--loader-text));
+}
+
+.neo-loader-style.neo-loader-three-bounce .neo-loader-bounce1 {
+  animation-delay: -0.32s;
+}
+
+.neo-loader-style.neo-loader-three-bounce .neo-loader-bounce2 {
+  animation-delay: -0.16s;
+}
+
+@-webkit-keyframes neo-three-bounce {
+  0%,
+  80%,
+  100% {
+    transform: scale(0);
+  }
+  40% {
+    transform: scale(1);
+  }
+}
+
+@keyframes neo-three-bounce {
+  0%,
+  80%,
+  100% {
+    transform: scale(0);
+  }
+  40% {
+    transform: scale(1);
+  }
+}

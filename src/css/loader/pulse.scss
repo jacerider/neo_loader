@@ -1,0 +1,26 @@
+.neo-loader-style.neo-loader-spinner-pulse {
+  @apply rounded-full;
+  position: inherit;
+  animation: neo-pulseScaleOut 1s infinite ease-in-out;
+  background-color: rgb(var(--loader-text));
+}
+
+@-webkit-keyframes neo-pulseScaleOut {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+
+@keyframes neo-pulseScaleOut {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}

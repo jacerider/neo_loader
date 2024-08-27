@@ -1,0 +1,17 @@
+{#
+/**
+ * @file neo-loader.html.twig
+
+ * @ingroup themeable
+ */
+#}
+<div{{ attributes }}>
+  {% if content %}
+    {{- content -}}
+  {% endif %}
+  {% if title %}
+    <div class="neo-loader-title">
+      {{- title -}}
+    </div>
+  {% endif %}
+</div>
