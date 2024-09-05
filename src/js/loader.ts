@@ -12,7 +12,7 @@
     show: (message:string, type:LoaderType, selector:HTMLElement|string, delay:number) => {
       type = type || 'fullscreen';
       selector = selector || 'body';
-      delay = delay || 300;
+      delay = delay || 1000;
       if (typeof drupalSettings.neoLoader !== 'undefined' && typeof drupalSettings.neoLoader.markup !== 'undefined') {
         const loader = document.createElement('div');
         loader.classList.add('ajax-progress');

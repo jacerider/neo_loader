@@ -3,7 +3,7 @@
   f.behaviors.neoLoader = {
     show: (n, e, s, r) => {
       var o;
-      if (e = e || "fullscreen", s = s || "body", r = r || 300, typeof d.neoLoader < "u" && typeof d.neoLoader.markup < "u") {
+      if (e = e || "fullscreen", s = s || "body", r = r || 1e3, typeof d.neoLoader < "u" && typeof d.neoLoader.markup < "u") {
         const t = document.createElement("div");
         if (t.classList.add("ajax-progress"), t.classList.add("ajax-progress-" + e), t.innerHTML = d.neoLoader.markup, n) {
           const a = document.createElement("div");
