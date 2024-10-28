@@ -12,13 +12,13 @@
     const o = this.progress.message && !t.neoLoader.hideAjaxMessage ? this.progress.message : null, s = e.behaviors.neoLoader.show(o, "fullscreen", "body", 300);
     s ? (r("body").addClass("ajax-loading"), this.progress.element = r(s)) : e.Ajax.prototype.setProgressIndicatorFullscreenOriginal.call(this);
   }, e.Ajax.prototype.successOriginal = e.Ajax.prototype.success, e.Ajax.prototype.success = function(o, s) {
-    var a = this;
+    var n = this;
     const i = function() {
-      a.progress.element = null;
-      var n = r(a.progress.element).closest(".ajax-progress-wrapper");
-      n.length && n.removeClass("ajax-progress-wrapper"), r("body").removeClass("ajax-loading"), e.Ajax.prototype.successOriginal.call(a, o, s);
+      n.progress.element = null;
+      var a = r(n.progress.element).closest(".ajax-progress-wrapper");
+      a.length && a.removeClass("ajax-progress-wrapper"), r("body").removeClass("ajax-loading"), e.Ajax.prototype.successOriginal.call(n, o, s);
     };
     e.behaviors.neoLoader.hide(i) || e.Ajax.prototype.successOriginal.call(this, o, s);
   };
-})(jQuery, globalThis, Drupal, drupalSettings);
+})(jQuery, void 0, Drupal, drupalSettings);
 //# sourceMappingURL=loader.ajax.js.map
