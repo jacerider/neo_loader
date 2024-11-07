@@ -14,6 +14,6 @@ ajax:
   version: VERSION
   neo: { group: contrib }
   js:
-    src/js/loader.ajax.js: {}
+    src/js/loader-ajax.js: {}
   dependencies:
     - neo_loader/loader
