@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  *
  * @Settings(
  *   id = "neo_loader",
- *   label = @Translation("Neo Loader"),
+ *   label = @Translation("Loader"),
  *   config_name = "neo_loader.settings",
  *   menu_title = @Translation("Loader"),
  *   route = "/admin/config/neo/neo-loader",

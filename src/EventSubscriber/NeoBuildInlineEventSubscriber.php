@@ -44,8 +44,8 @@ class NeoBuildInlineEventSubscriber implements EventSubscriberInterface {
     if ($color = $this->settings->getValue('color')) {
       $event->addCssValue('--loader-bg', 'var(--color-' . $color . ')');
       $event->addCssValue('--loader-text', 'var(--color-' . str_replace('-', '-content-', $color) . ')');
-      $event->addCacheTags(['config:neo_loader.settings']);
     }
+    $event->addCacheTags(['config:neo_loader.settings']);
   }
 
   /**
