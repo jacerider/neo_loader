@@ -36,10 +36,10 @@
 
   &.ajax-progress-fullscreen {
     @apply fixed left-0 z-50 flex h-full w-full flex-col items-center bg-base-900/50 opacity-0 transition-all;
-    top: var(--drupal-displace-offset-top);
-    right: var(--drupal-displace-offset-right);
-    bottom: var(--drupal-displace-offset-bottom);
-    left: var(--drupal-displace-offset-left);
+    top: var(--drupal-displace-offset-top, 0px);
+    right: var(--drupal-displace-offset-right, 0px);
+    bottom: var(--drupal-displace-offset-bottom, 0px);
+    left: var(--drupal-displace-offset-left, 0px);
 
     .neo-loader {
       @apply -translate-y-full rounded-t-none transition-transform;
