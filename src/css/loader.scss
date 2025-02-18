@@ -1,7 +1,7 @@
 .neo-loader {
   @apply inline-flex flex-col items-center justify-center gap-3 rounded p-4 text-xs;
-  background-color: rgb(var(--loader-bg));
-  color: rgb(var(--loader-text));
+  background-color: var(--loader-bg);
+  color: var(--loader-text);
 
   .neo-loader-title {
     @apply mt-2 text-xs font-bold uppercase leading-none;

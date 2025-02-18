@@ -8,7 +8,7 @@
   width: 60%;
   height: 60%;
   animation: neo-chasingDotsBounce 2s infinite ease-in-out;
-  background-color: rgb(var(--loader-text));
+  background-color: var(--loader-text);
 }
 
 .neo-loader-style.neo-loader-chasing-dots .neo-loader-dot2 {

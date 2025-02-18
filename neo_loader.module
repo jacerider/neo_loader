@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Render\Markup;
+use Drupal\Core\Url;
 
 /**
  * Implements hook_theme().
@@ -14,8 +15,10 @@ function neo_loader_theme($existing, $type, $theme, $path) {
   $themes = [];
   $themes['neo_loader'] = [
     'variables' => [
-      'loader' => 'chasing_dots',
+      'loader' => 'wave',
       'title' => '',
+      'color' => '',
+      'ajax' => NULL,
       'content' => [],
       'attributes' => [],
     ],
@@ -97,12 +100,36 @@ function neo_loader_page_attachments(array &$page) {
  *   - attributes: HTML attributes for the containing element.
  */
 function template_preprocess_neo_loader(array &$variables) {
+  $settings = \Drupal::service('neo_loader.settings')->getActive();
   $variables['attributes']['class'][] = 'neo-loader';
+  if (empty($variables['loader'])) {
+    $variables['loader'] = $settings->getValue('loader');
+  }
   /** @var \Drupal\neo_loader\LoaderManagerInterface $loader_manager */
   $loader_manager = \Drupal::service('plugin.manager.neo_loader');
   if ($loader_manager->hasDefinition($variables['loader'])) {
     $instance = $loader_manager->createInstance($variables['loader']);
+    $color = $variables['color'] ?? NULL;
+    if (!$color) {
+      $color = $settings->getValue('color');
+    }
+    if ($color) {
+      $bg = 'rgb(var(--color-' . $color . '))';
+      $text = 'rgb(var(--color-' . str_replace('-', '-content-', $color) . '))';
+      $variables['attributes']['style'] = '--loader-bg: ' . $bg . '; --loader-text: ' . $text . ';';
+    }
     $variables['content']['#attached']['library'][] = 'neo_loader/plugin.' . str_replace('_', '-', $variables['loader']);
     $variables['content']['loader']['#markup'] = Markup::create($instance->getMarkup());
+    if (!empty($variables['ajax'])) {
+      if (empty($variables['attributes']['id'])) {
+        $variables['attributes']['id'] = 'neo-loader-' . uniqid();
+      }
+      $variables['#attached']['library'][] = 'neo_loader/ajax';
+      if ($variables['ajax'] instanceof Url) {
+        $variables['ajax'] = $variables['ajax']->toString();
+      }
+      $variables['attributes']['data-loader-url'] = $variables['ajax'];
+      $variables['attributes']['class'][] = 'neo-loader-ajax';
+    }
   }
 }

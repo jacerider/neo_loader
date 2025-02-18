@@ -2,7 +2,7 @@
   @apply rounded-full;
   position: inherit;
   animation: neo-pulseScaleOut 1s infinite ease-in-out;
-  background-color: rgb(var(--loader-text));
+  background-color: var(--loader-text);
 }
 
 @-webkit-keyframes neo-pulseScaleOut {

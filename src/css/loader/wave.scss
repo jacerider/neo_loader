@@ -5,7 +5,7 @@
 .neo-loader-style.neo-loader-wave .neo-loader-rect {
   @apply inline-block h-full w-1.5;
   animation: neo-waveStretchDelay 1.2s infinite ease-in-out;
-  background-color: rgb(var(--loader-text));
+  background-color: var(--loader-text);
 }
 
 .neo-loader-style.neo-loader-wave .neo-loader-rect1 {

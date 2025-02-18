@@ -17,8 +17,9 @@ class Loader extends RenderElementBase {
   public function getInfo() {
     return [
       '#theme' => 'neo_loader',
-      '#loader' => 'chasing_dots',
+      '#loader' => 'wave',
       '#title' => '',
+      '#color' => '',
     ];
   }
 

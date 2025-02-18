@@ -12,7 +12,7 @@
 .neo-loader-style.neo-loader-folding-cube .neo-loader-cube:before {
   @apply absolute left-0 top-0 h-full w-full;
   animation: neo-foldCubeAngle 2.4s infinite linear both;
-  background-color: rgb(var(--loader-text));
+  background-color: var(--loader-text);
   content: '';
   transform-origin: 100% 100%;
 }

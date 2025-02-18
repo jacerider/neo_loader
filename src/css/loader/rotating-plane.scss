@@ -1,6 +1,6 @@
 .neo-loader-style.neo-loader-rotating-plane {
   animation: neo-rotatePlane 1.2s infinite ease-in-out;
-  background-color: rgb(var(--loader-text));
+  background-color: var(--loader-text);
 }
 
 @-webkit-keyframes neo-rotatePlane {

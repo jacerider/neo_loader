@@ -7,7 +7,7 @@
   width: 15%;
   height: 15%;
   animation: neo-circleFadeDelay 1.2s infinite ease-in-out both;
-  background-color: rgb(var(--loader-text));
+  background-color: var(--loader-text);
   content: '';
 }
 

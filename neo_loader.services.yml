@@ -5,8 +5,12 @@ services:
   neo_loader.settings:
     parent: neo_settings.repository
     arguments: ['neo_loader']
-  neo_loader.neo_build_inline_event_subscriber:
-    class: '\Drupal\neo_loader\EventSubscriber\NeoBuildInlineEventSubscriber'
-    arguments: ['@neo_loader.settings']
+  # neo_loader.neo_build_inline_event_subscriber:
+  #   class: '\Drupal\neo_loader\EventSubscriber\NeoBuildInlineEventSubscriber'
+  #   arguments: ['@neo_loader.settings']
+  #   tags:
+  #     - { name: 'event_subscriber' }
+  neo_loader.twig_extension:
+    class: Drupal\neo_loader\TwigExtension
     tags:
-      - { name: 'event_subscriber' }
+      - { name: twig.extension }

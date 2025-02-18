@@ -5,7 +5,7 @@
 .neo-loader-style.neo-loader-three-bounce .neo-loader-child {
   @apply inline-block h-5 w-5 rounded-full;
   animation: neo-three-bounce 1.4s ease-in-out 0s infinite both;
-  background-color: rgb(var(--loader-text));
+  background-color: var(--loader-text);
 }
 
 .neo-loader-style.neo-loader-three-bounce .neo-loader-bounce1 {
