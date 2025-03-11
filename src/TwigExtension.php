@@ -2,10 +2,6 @@
 
 namespace Drupal\neo_loader;
 
-use Drupal\Core\Template\Attribute;
-use Drupal\Core\Url;
-use Drupal\file\FileInterface;
-use Drupal\media\MediaInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
