@@ -38,6 +38,8 @@ class TwigExtension extends AbstractExtension {
    *   The loader color. Example: primary-500.
    * @param string $loader
    *   The loader style. Default: 'wave'.
+   * @param string $ajax
+   *   The URL to load when the loader comes into view. Default: 'false'.
    */
   public static function renderLoader(string $title = NULL, string $color = NULL, string $loader = NULL, string $ajax = NULL) {
     $build = [
