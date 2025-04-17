@@ -41,7 +41,7 @@ class TwigExtension extends AbstractExtension {
    * @param string $ajax
    *   The URL to load when the loader comes into view. Default: 'false'.
    */
-  public static function renderLoader(string $title = NULL, string $color = NULL, string $loader = NULL, string $ajax = NULL) {
+  public static function renderLoader(?string $title = NULL, ?string $color = NULL, ?string $loader = NULL, ?string $ajax = NULL) {
     $build = [
       '#theme' => 'neo_loader',
       '#title' => $title,

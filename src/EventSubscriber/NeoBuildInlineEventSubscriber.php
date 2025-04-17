@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Drupal\neo_loader\EventSubscriber;
 
@@ -26,7 +26,7 @@ class NeoBuildInlineEventSubscriber implements EventSubscriberInterface {
    * Constructs a new NeoBuildEventSubscriber object.
    */
   public function __construct(
-    SettingsRepositoryInterface $settings
+    SettingsRepositoryInterface $settings,
   ) {
     $this->settings = $settings->getActive();
   }

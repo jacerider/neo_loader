@@ -18,7 +18,7 @@ class LoaderManager extends DefaultPluginManager implements LoaderManagerInterfa
   public function __construct(
     \Traversable $namespaces,
     CacheBackendInterface $cache_backend,
-    ModuleHandlerInterface $module_handler
+    ModuleHandlerInterface $module_handler,
   ) {
     parent::__construct('Plugin/Loader', $namespaces, $module_handler, 'Drupal\neo_loader\Plugin\LoaderPluginInterface', 'Drupal\neo_loader\Annotation\Loader');
     $this->alterInfo('neo_loader_info');

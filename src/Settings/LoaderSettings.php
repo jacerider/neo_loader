@@ -61,7 +61,7 @@ final class LoaderSettings extends SettingsBase {
     FormBuilderInterface $form_builder,
     LoaderManagerInterface $loader_manager,
     RequestStack $request_stack,
-    AdminContext $admin_context
+    AdminContext $admin_context,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $messenger, $form_builder);
     $this->loaderManager = $loader_manager;
