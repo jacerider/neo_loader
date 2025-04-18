@@ -8,10 +8,10 @@
         var observer = new IntersectionObserver((entries, observer) => {
           entries.forEach(entry => {
             if (entry.intersectionRatio > 0) {
+              observer.disconnect();
               let url = element.dataset.loaderUrl;
               if (url) {
                 url = addDestination(url);
-                observer.disconnect();
                 const options = {
                   url: url,
                   progress: false,

@@ -5,9 +5,10 @@
         var n = new IntersectionObserver((r, i) => {
           r.forEach((o) => {
             if (o.intersectionRatio > 0) {
+              i.disconnect();
               let e = t.dataset.loaderUrl;
               if (e) {
-                e = c(e), i.disconnect();
+                e = c(e);
                 const d = {
                   url: e,
                   progress: !1,
