@@ -1,4 +1,4 @@
-(function (Drupal, drupalSettings) {
+(function (Drupal, once, drupalSettings) {
 
   type LoaderType =
     | 'fullscreen'
@@ -9,10 +9,21 @@
 
   Drupal.behaviors.neoLoader = {
 
+    attach: function (context:any) {
+      once('neo-loader', '.use-neo-loader', context).forEach((element) => {
+        element.addEventListener('click', (_e:Event) => {
+          const message = element.getAttribute('data-neo-loader-message') || Drupal.t('Loading...');
+          const type = parseInt(element.getAttribute('data-neo-loader-type') || 'fullscreen');
+          const delay = parseInt(element.getAttribute('data-neo-loader-delay') || '0');
+          this.show(message, type, element, delay);
+        });
+      });
+    },
+
     show: (message:string, type:LoaderType, selector:HTMLElement|string, delay:number) => {
       type = type || 'fullscreen';
       selector = selector || 'body';
-      delay = delay || 1000;
+      delay = typeof delay === 'undefined' ? 1000 : delay + 10;
       if (typeof drupalSettings.neoLoader !== 'undefined' && typeof drupalSettings.neoLoader.markup !== 'undefined') {
         const loader = document.createElement('div');
         loader.classList.add('ajax-progress');
@@ -91,6 +102,6 @@
     }
   };
 
-})(Drupal, drupalSettings);
+})(Drupal, once, drupalSettings);
 
 export {};

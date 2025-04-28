@@ -1,5 +1,5 @@
 .neo-loader {
-  @apply inline-flex flex-col items-center justify-center gap-3 rounded p-4 text-xs;
+  @apply inline-flex cursor-wait flex-col items-center justify-center gap-3 rounded p-4 text-xs;
   background-color: var(--loader-bg);
   color: var(--loader-text);
 
@@ -35,7 +35,8 @@
   }
 
   &.ajax-progress-fullscreen {
-    @apply fixed left-0 z-50 flex h-full w-full flex-col items-center bg-base-900/50 opacity-0 transition-all;
+    @apply fixed left-0 flex h-full w-full cursor-wait flex-col items-center bg-base-900/50 opacity-0 transition-all;
+    z-index: 49;
     top: var(--drupal-displace-offset-top, 0px);
     right: var(--drupal-displace-offset-right, 0px);
     bottom: var(--drupal-displace-offset-bottom, 0px);

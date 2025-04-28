@@ -8,6 +8,7 @@ loader:
     src/js/loader.ts: {}
   dependencies:
     - core/drupal
+    - core/once
     - core/drupalSettings
 
 loader-ajax:
