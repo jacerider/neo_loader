@@ -29,7 +29,7 @@
     }
 
     const message = this.progress.message && !drupalSettings.neoLoader.hideAjaxMessage ? this.progress.message : null;
-    const element = Drupal.behaviors.neoLoader.show(message, 'throbber', this.element, 300);
+    const element = Drupal.behaviors.neoLoader.show(message, 'throbber', this.element);
     if (element) {
       $('body').addClass('ajax-loading');
       this.progress.element = $(element);
@@ -45,7 +45,7 @@
   Drupal.Ajax.prototype.setProgressIndicatorFullscreenOriginal = Drupal.Ajax.prototype.setProgressIndicatorFullscreen;
   Drupal.Ajax.prototype.setProgressIndicatorFullscreen = function () {
     const message = this.progress.message && !drupalSettings.neoLoader.hideAjaxMessage ? this.progress.message : null;
-    const element = Drupal.behaviors.neoLoader.show(message, 'fullscreen', 'body', 300);
+    const element = Drupal.behaviors.neoLoader.show(message, 'fullscreen', 'body');
     if (element) {
       $('body').addClass('ajax-loading');
       this.progress.element = $(element);
