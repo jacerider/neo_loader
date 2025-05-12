@@ -23,7 +23,7 @@
     show: (message:string, type:LoaderType, selector:HTMLElement|string, delay:number) => {
       type = type || 'fullscreen';
       selector = selector || 'body';
-      delay = typeof delay === 'undefined' ? 1000 : delay + 10;
+      delay = Math.max(typeof delay === 'undefined' ? 200 : delay, 10);
       if (typeof drupalSettings.neoLoader !== 'undefined' && typeof drupalSettings.neoLoader.markup !== 'undefined') {
         const loader = document.createElement('div');
         loader.classList.add('ajax-progress');
@@ -80,21 +80,18 @@
                 const target = e.target as HTMLElement;
                 if (target.classList.contains('ajax-progress')) {
                   loader.remove();
-                  if (callback) {
-                    callback();
-                  }
                 }
               };
               loader.addEventListener('transitionend', transitionCallback);
               loader.classList.remove('active');
             }
-          }, 100);
+          }, 10);
         }
         else {
           loader.remove();
-          if (callback) {
-            callback();
-          }
+        }
+        if (callback) {
+          callback();
         }
         return loader;
       }
