@@ -6,10 +6,10 @@
       this.setProgressIndicatorFullscreen();
       return;
     }
-    const o = this.progress.message && !t.neoLoader.hideAjaxMessage ? this.progress.message : null, s = e.behaviors.neoLoader.show(o, "throbber", this.element, 300);
+    const o = this.progress.message && !t.neoLoader.hideAjaxMessage ? this.progress.message : null, s = e.behaviors.neoLoader.show(o, "throbber", this.element);
     s ? (r("body").addClass("ajax-loading"), this.progress.element = r(s)) : e.Ajax.prototype.setProgressIndicatorThrobberOriginal.call(this);
   }, e.Ajax.prototype.setProgressIndicatorFullscreenOriginal = e.Ajax.prototype.setProgressIndicatorFullscreen, e.Ajax.prototype.setProgressIndicatorFullscreen = function() {
-    const o = this.progress.message && !t.neoLoader.hideAjaxMessage ? this.progress.message : null, s = e.behaviors.neoLoader.show(o, "fullscreen", "body", 300);
+    const o = this.progress.message && !t.neoLoader.hideAjaxMessage ? this.progress.message : null, s = e.behaviors.neoLoader.show(o, "fullscreen", "body");
     s ? (r("body").addClass("ajax-loading"), this.progress.element = r(s)) : e.Ajax.prototype.setProgressIndicatorFullscreenOriginal.call(this);
   }, e.Ajax.prototype.successOriginal = e.Ajax.prototype.success, e.Ajax.prototype.success = function(o, s) {
     var n = this;

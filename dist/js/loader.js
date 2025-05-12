@@ -1,30 +1,30 @@
 (function(f, u, d) {
   let c = !1, l = null;
   f.behaviors.neoLoader = {
-    attach: function(a) {
-      u("neo-loader", ".use-neo-loader", a).forEach((e) => {
-        e.addEventListener("click", (s) => {
-          const n = e.getAttribute("data-neo-loader-message") || f.t("Loading..."), r = parseInt(e.getAttribute("data-neo-loader-type") || "fullscreen"), t = parseInt(e.getAttribute("data-neo-loader-delay") || "0");
-          this.show(n, r, e, t);
+    attach: function(o) {
+      u("neo-loader", ".use-neo-loader", o).forEach((e) => {
+        e.addEventListener("click", (a) => {
+          const s = e.getAttribute("data-neo-loader-message") || f.t("Loading..."), r = parseInt(e.getAttribute("data-neo-loader-type") || "fullscreen"), t = parseInt(e.getAttribute("data-neo-loader-delay") || "0");
+          this.show(s, r, e, t);
         });
       });
     },
-    show: (a, e, s, n) => {
+    show: (o, e, a, s) => {
       var r;
-      if (e = e || "fullscreen", s = s || "body", n = typeof n > "u" ? 1e3 : n + 10, typeof d.neoLoader < "u" && typeof d.neoLoader.markup < "u") {
+      if (e = e || "fullscreen", a = a || "body", s = Math.max(typeof s > "u" ? 200 : s, 10), typeof d.neoLoader < "u" && typeof d.neoLoader.markup < "u") {
         const t = document.createElement("div");
-        if (t.classList.add("ajax-progress"), t.classList.add("ajax-progress-" + e), t.innerHTML = d.neoLoader.markup, a) {
-          const o = document.createElement("div");
-          o.classList.add("message"), o.textContent = a, (r = t.querySelector(".neo-loader")) == null || r.appendChild(o);
+        if (t.classList.add("ajax-progress"), t.classList.add("ajax-progress-" + e), t.innerHTML = d.neoLoader.markup, o) {
+          const n = document.createElement("div");
+          n.classList.add("message"), n.textContent = o, (r = t.querySelector(".neo-loader")) == null || r.appendChild(n);
         }
-        if (s) {
-          const o = typeof s == "string" ? document.querySelector(s) : s;
-          if (o) {
+        if (a) {
+          const n = typeof a == "string" ? document.querySelector(a) : a;
+          if (n) {
             if (e === "fullscreen")
-              o.appendChild(t);
+              n.appendChild(t);
             else {
-              let i = o.closest(".js-form-item, form");
-              i && i.classList.add("ajax-progress-wrapper"), o.after(t);
+              let i = n.closest(".js-form-item, form");
+              i && i.classList.add("ajax-progress-wrapper"), n.after(t);
             }
             return l = setTimeout(() => {
               c = !1;
@@ -32,29 +32,29 @@
                 L.target.classList.contains("ajax-progress") && (c = !0);
               };
               t.addEventListener("transitionend", i), t.classList.add("active");
-            }, n), t;
+            }, s), t;
           }
         }
       }
       return null;
     },
-    hide: (a) => {
+    hide: (o) => {
       l && clearTimeout(l);
       const e = document.querySelector(".ajax-progress");
       if (e) {
         if (e.classList.contains("active")) {
-          const s = setInterval(() => {
+          const a = setInterval(() => {
             if (c) {
-              clearInterval(s);
-              const n = (r) => {
-                r.target.classList.contains("ajax-progress") && (e.remove(), a && a());
+              clearInterval(a);
+              const s = (r) => {
+                r.target.classList.contains("ajax-progress") && e.remove();
               };
-              e.addEventListener("transitionend", n), e.classList.remove("active");
+              e.addEventListener("transitionend", s), e.classList.remove("active");
             }
-          }, 100);
+          }, 10);
         } else
-          e.remove(), a && a();
-        return e;
+          e.remove();
+        return o && o(), e;
       }
       return null;
     }
