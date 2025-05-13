@@ -6,6 +6,12 @@
 
   let fullyLoaded = false;
   let waitTimer:ReturnType<typeof setTimeout>|null = null;
+  const showCallback = (e:Event) => {
+    const target = e.target as HTMLElement;
+    if (target.classList.contains('ajax-progress')) {
+      fullyLoaded = true;
+    }
+  };
 
   Drupal.behaviors.neoLoader = {
 
@@ -23,7 +29,7 @@
     show: (message:string, type:LoaderType, selector:HTMLElement|string, delay:number) => {
       type = type || 'fullscreen';
       selector = selector || 'body';
-      delay = Math.max(typeof delay === 'undefined' ? 200 : delay, 10);
+      delay = Math.max(typeof delay === 'undefined' ? 0 : delay, 10);
       if (typeof drupalSettings.neoLoader !== 'undefined' && typeof drupalSettings.neoLoader.markup !== 'undefined') {
         const loader = document.createElement('div');
         loader.classList.add('ajax-progress');
@@ -50,13 +56,7 @@
             }
             waitTimer = setTimeout(() => {
               fullyLoaded = false;
-              const transitionCallback = (e:Event) => {
-                const target = e.target as HTMLElement;
-                if (target.classList.contains('ajax-progress')) {
-                  fullyLoaded = true;
-                }
-              };
-              loader.addEventListener('transitionend', transitionCallback);
+              loader.addEventListener('transitionend', showCallback);
               loader.classList.add('active');
             }, delay);
             return loader;
@@ -73,19 +73,15 @@
       const loader = document.querySelector<HTMLElement>('.ajax-progress');
       if (loader) {
         if (loader.classList.contains('active')) {
-          const checkFullyLoaded = setInterval(() => {
-            if (fullyLoaded) {
-              clearInterval(checkFullyLoaded);
-              const transitionCallback = (e:Event) => {
-                const target = e.target as HTMLElement;
-                if (target.classList.contains('ajax-progress')) {
-                  loader.remove();
-                }
-              };
-              loader.addEventListener('transitionend', transitionCallback);
-              loader.classList.remove('active');
+          const hideCallback = (e:Event) => {
+            const target = e.target as HTMLElement;
+            if (target.classList.contains('ajax-progress')) {
+              loader.remove();
             }
-          }, 10);
+          };
+          loader.removeEventListener('transitionend', showCallback);
+          loader.addEventListener('transitionend', hideCallback);
+          loader.classList.remove('active');
         }
         else {
           loader.remove();
