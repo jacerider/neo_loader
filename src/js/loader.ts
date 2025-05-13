@@ -4,14 +4,7 @@
     | 'fullscreen'
     | 'throbber';
 
-  let fullyLoaded = false;
   let waitTimer:ReturnType<typeof setTimeout>|null = null;
-  const showCallback = (e:Event) => {
-    const target = e.target as HTMLElement;
-    if (target.classList.contains('ajax-progress')) {
-      fullyLoaded = true;
-    }
-  };
 
   Drupal.behaviors.neoLoader = {
 
@@ -55,8 +48,6 @@
               position.after(loader);
             }
             waitTimer = setTimeout(() => {
-              fullyLoaded = false;
-              loader.addEventListener('transitionend', showCallback);
               loader.classList.add('active');
             }, delay);
             return loader;
@@ -79,7 +70,6 @@
               loader.remove();
             }
           };
-          loader.removeEventListener('transitionend', showCallback);
           loader.addEventListener('transitionend', hideCallback);
           loader.classList.remove('active');
         }
