@@ -1,7 +1,8 @@
 .neo-loader {
-  @apply inline-flex cursor-wait flex-col items-center justify-center gap-3 rounded p-4 text-xs;
+  @apply inline-flex cursor-wait flex-col items-center justify-center gap-3 rounded-lg p-3 text-xs;
   background-color: var(--loader-bg);
   color: var(--loader-text);
+  // box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.5);
 
   .neo-loader-title {
     @apply mt-2 text-xs font-bold uppercase leading-none;
@@ -35,19 +36,40 @@
   }
 
   &.ajax-progress-fullscreen {
-    @apply fixed left-0 flex h-full w-full cursor-wait flex-col items-center bg-base-900/50 opacity-0 transition-all;
+    @apply fixed left-0 flex h-full w-full cursor-wait flex-col items-center opacity-0 transition-all;
     z-index: 49;
     top: var(--drupal-displace-offset-top, 0px);
     right: var(--drupal-displace-offset-right, 0px);
     bottom: var(--drupal-displace-offset-bottom, 0px);
     left: var(--drupal-displace-offset-left, 0px);
 
+    &:after {
+      @apply bg-base-900/70 transition-opacity opacity-0;
+      display: block;
+      position: absolute;
+      top: 0;
+      right: 0;
+      left: 0;
+      bottom: 0;
+      transition-delay: 1000ms;
+      content: '';
+    }
+
     .neo-loader {
-      @apply -translate-y-full rounded-t-none transition-transform;
+      @apply -translate-y-full rounded-t-none transition-transform z-10;
+
+      .neo-loader-style {
+        @apply h-8 min-w-8;
+      }
     }
 
     &.active {
       @apply opacity-100 duration-300;
+
+      &:after {
+        @apply opacity-100;
+        transition-duration: 2000ms;
+      }
 
       .neo-loader {
         @apply translate-y-0 duration-300;
