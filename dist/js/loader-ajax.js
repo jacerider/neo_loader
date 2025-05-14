@@ -14,9 +14,8 @@
   }, e.Ajax.prototype.successOriginal = e.Ajax.prototype.success, e.Ajax.prototype.success = function(o, s) {
     var n = this;
     const i = function() {
-      n.progress.element = null;
       var a = r(n.progress.element).closest(".ajax-progress-wrapper");
-      a.length && a.removeClass("ajax-progress-wrapper"), r("body").removeClass("ajax-loading"), e.Ajax.prototype.successOriginal.call(n, o, s);
+      a.length && a.removeClass("ajax-progress-wrapper"), n.progress.element = null, r("body").removeClass("ajax-loading"), e.Ajax.prototype.successOriginal.call(n, o, s);
     };
     e.behaviors.neoLoader.hide(i) || e.Ajax.prototype.successOriginal.call(this, o, s);
   };

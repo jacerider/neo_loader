@@ -1,51 +1,53 @@
 (function(c, u, i) {
   let d = null;
   c.behaviors.neoLoader = {
-    attach: function(n) {
-      u("neo-loader", ".use-neo-loader", n).forEach((e) => {
-        e.addEventListener("click", (a) => {
-          const s = e.getAttribute("data-neo-loader-message") || c.t("Loading..."), r = parseInt(e.getAttribute("data-neo-loader-type") || "fullscreen"), t = parseInt(e.getAttribute("data-neo-loader-delay") || "0");
-          this.show(s, r, e, t);
+    attach: function(s) {
+      u("neo-loader", ".use-neo-loader", s).forEach((e) => {
+        e.addEventListener("click", (t) => {
+          const a = e.getAttribute("data-neo-loader-message") || c.t("Loading..."), r = parseInt(e.getAttribute("data-neo-loader-type") || "fullscreen"), n = parseInt(e.getAttribute("data-neo-loader-delay") || "0");
+          this.show(a, r, e, n);
         });
       });
     },
-    show: (n, e, a, s) => {
+    show: (s, e, t, a) => {
       var r;
-      if (e = e || "fullscreen", a = a || "body", s = Math.max(typeof s > "u" ? 0 : s, 10), typeof i.neoLoader < "u" && typeof i.neoLoader.markup < "u") {
-        const t = document.createElement("div");
-        if (t.classList.add("ajax-progress"), t.classList.add("ajax-progress-" + e), t.innerHTML = i.neoLoader.markup, n) {
+      if (e = e || "fullscreen", t = t || "body", a = Math.max(typeof a > "u" ? 0 : a, 10), typeof i.neoLoader < "u" && typeof i.neoLoader.markup < "u") {
+        const n = document.createElement("div");
+        if (n.classList.add("ajax-progress"), n.classList.add("ajax-progress-" + e), n.innerHTML = i.neoLoader.markup, s) {
           const o = document.createElement("div");
-          o.classList.add("message"), o.textContent = n, (r = t.querySelector(".neo-loader")) == null || r.appendChild(o);
+          o.classList.add("message"), o.textContent = s, (r = n.querySelector(".neo-loader")) == null || r.appendChild(o);
         }
-        if (a) {
-          const o = typeof a == "string" ? document.querySelector(a) : a;
+        if (t) {
+          const o = typeof t == "string" ? document.querySelector(t) : t;
           if (o) {
             if (e === "fullscreen")
-              o.appendChild(t);
+              o.appendChild(n);
             else {
               let l = o.closest(".js-form-item, form");
-              l && l.classList.add("ajax-progress-wrapper"), o.after(t);
+              l && l.classList.add("ajax-progress-wrapper"), o.after(n);
             }
             return d = setTimeout(() => {
-              t.classList.add("active");
-            }, s), t;
+              n.classList.add("active");
+            }, a), n;
           }
         }
       }
       return null;
     },
-    hide: (n) => {
+    hide: (s) => {
       d && clearTimeout(d);
-      const e = document.querySelector(".ajax-progress");
+      const e = document.querySelector(".ajax-progress:not(.ajax-hiding)");
       if (e) {
-        if (e.classList.contains("active")) {
-          const a = (s) => {
-            s.target.classList.contains("ajax-progress") && e.remove();
+        if (e.classList.add("ajax-hiding"), e.classList.contains("active")) {
+          const t = (a) => {
+            a.target instanceof HTMLElement && (a.target.removeEventListener("transitionend", t), a.target.remove());
           };
-          e.addEventListener("transitionend", a), e.classList.remove("active");
+          e.addEventListener("transitionend", t), setTimeout(() => {
+            e.classList.remove("active");
+          });
         } else
           e.remove();
-        return n && n(), e;
+        return s && s(), e;
       }
       return null;
     }

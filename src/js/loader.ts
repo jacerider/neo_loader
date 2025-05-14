@@ -61,17 +61,20 @@
       if (waitTimer) {
         clearTimeout(waitTimer);
       }
-      const loader = document.querySelector<HTMLElement>('.ajax-progress');
+      const loader = document.querySelector<HTMLElement>('.ajax-progress:not(.ajax-hiding)');
       if (loader) {
+        loader.classList.add('ajax-hiding');
         if (loader.classList.contains('active')) {
           const hideCallback = (e:Event) => {
-            const target = e.target as HTMLElement;
-            if (target.classList.contains('ajax-progress')) {
-              loader.remove();
+            if (e.target instanceof HTMLElement) {
+              e.target.removeEventListener('transitionend', hideCallback);
+              e.target.remove();
             }
           };
           loader.addEventListener('transitionend', hideCallback);
-          loader.classList.remove('active');
+          setTimeout(() => {
+            loader.classList.remove('active');
+          });
         }
         else {
           loader.remove();
