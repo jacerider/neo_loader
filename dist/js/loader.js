@@ -5,7 +5,7 @@
       u("neo-loader", ".use-neo-loader", s).forEach((e) => {
         e.addEventListener("click", (t) => {
           const a = e.getAttribute("data-neo-loader-message") || c.t("Loading..."), r = parseInt(e.getAttribute("data-neo-loader-type") || "fullscreen"), n = parseInt(e.getAttribute("data-neo-loader-delay") || "0");
-          this.show(a, r, e, n);
+          this.show(a, r, "body", n);
         });
       });
     },

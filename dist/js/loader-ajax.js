@@ -1,4 +1,4 @@
-(function(r, c, e, t) {
+(function(r, a, e, t) {
   e.Ajax.prototype.beforeSendOriginal = e.Ajax.prototype.beforeSend, e.Ajax.prototype.beforeSend = function(o, s) {
     this.$form && r("body").addClass("ajax-loading"), this.beforeSendOriginal(o, s);
   }, e.Ajax.prototype.progressTimer = 0, e.Ajax.prototype.setProgressIndicatorThrobberOriginal = e.Ajax.prototype.setProgressIndicatorThrobber, e.Ajax.prototype.setProgressIndicatorThrobber = function() {
@@ -14,8 +14,7 @@
   }, e.Ajax.prototype.successOriginal = e.Ajax.prototype.success, e.Ajax.prototype.success = function(o, s) {
     var n = this;
     const i = function() {
-      var a = r(n.progress.element).closest(".ajax-progress-wrapper");
-      a.length && a.removeClass("ajax-progress-wrapper"), n.progress.element = null, r("body").removeClass("ajax-loading"), e.Ajax.prototype.successOriginal.call(n, o, s);
+      n.progress.element = null, r("body").removeClass("ajax-loading"), e.Ajax.prototype.successOriginal.call(n, o, s);
     };
     e.behaviors.neoLoader.hide(i) || e.Ajax.prototype.successOriginal.call(this, o, s);
   };

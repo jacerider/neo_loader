@@ -14,7 +14,7 @@
           const message = element.getAttribute('data-neo-loader-message') || Drupal.t('Loading...');
           const type = parseInt(element.getAttribute('data-neo-loader-type') || 'fullscreen');
           const delay = parseInt(element.getAttribute('data-neo-loader-delay') || '0');
-          this.show(message, type, element, delay);
+          this.show(message, type, 'body', delay);
         });
       });
     },

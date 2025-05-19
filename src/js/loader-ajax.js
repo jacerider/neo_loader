@@ -62,11 +62,11 @@
   Drupal.Ajax.prototype.success = function (response, status) {
     var _this = this;
     const callback = function () {
-      var closest = $(_this.progress.element).closest('.ajax-progress-wrapper');
-      if (closest.length) {
-        closest.removeClass('ajax-progress-wrapper');
-      }
       _this.progress.element = null;
+      // var closest = $(_this.progress.element).closest('.ajax-progress-wrapper');
+      // if (closest.length) {
+      //   closest.removeClass('ajax-progress-wrapper');
+      // }
       $('body').removeClass('ajax-loading');
       Drupal.Ajax.prototype.successOriginal.call(_this, response, status);
     }
