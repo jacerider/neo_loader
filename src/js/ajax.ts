@@ -3,7 +3,6 @@
   Drupal.behaviors.neoLoaderAjax = {
 
     attach: (_context: HTMLElement) => {
-
       once('neo-loader-ajax', '[data-loader-url]').forEach((element) => {
         var observer = new IntersectionObserver((entries, observer) => {
           entries.forEach(entry => {

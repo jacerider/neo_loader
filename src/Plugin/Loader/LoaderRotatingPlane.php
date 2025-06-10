@@ -17,7 +17,7 @@ class LoaderRotatingPlane extends LoaderPluginBase {
   /**
    * Function to set markup.
    *
-   * @inheritdoc
+   * {@inheritdoc}
    */
   protected function setMarkup() {
     return '<div class="neo-loader-style neo-loader-rotating-plane"></div>';
@@ -26,7 +26,7 @@ class LoaderRotatingPlane extends LoaderPluginBase {
   /**
    * Function to set css file.
    *
-   * @inheritdoc
+   * {@inheritdoc}
    */
   protected function setCssFile() {
     return $this->path . '/css/loader/rotating-plane.scss';

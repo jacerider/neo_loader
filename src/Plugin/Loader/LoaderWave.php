@@ -17,7 +17,7 @@ class LoaderWave extends LoaderPluginBase {
   /**
    * Function to set markup.
    *
-   * @inheritdoc
+   * {@inheritdoc}
    */
   protected function setMarkup() {
     return '<div class="neo-loader-style neo-loader-wave">
@@ -32,7 +32,7 @@ class LoaderWave extends LoaderPluginBase {
   /**
    * Function to set css file.
    *
-   * @inheritdoc
+   * {@inheritdoc}
    */
   protected function setCssFile() {
     return $this->path . '/css/loader/wave.scss';

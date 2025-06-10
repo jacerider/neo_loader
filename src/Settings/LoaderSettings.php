@@ -118,11 +118,16 @@ final class LoaderSettings extends SettingsBase {
       ],
     ];
 
+    $parts = explode('-', $this->getValue('color'));
+    $last = array_pop($parts);
+    $parts[] = 'content';
     $loader_id = $this->getValue('loader');
     $form['wrapper']['preview'] = [
       '#theme' => 'neo_loader',
       '#loader' => $loader_id,
       '#title' => '',
+      '#prefix' => '<div class="text-' . implode('-', $parts) . '-' . $last . '">',
+      '#suffix' => '</div>',
     ];
 
     $form['hide_ajax_message'] = [

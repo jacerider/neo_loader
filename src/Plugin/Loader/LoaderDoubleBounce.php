@@ -17,7 +17,7 @@ class LoaderDoubleBounce extends LoaderPluginBase {
   /**
    * Function to set markup.
    *
-   * @inheritdoc
+   * {@inheritdoc}
    */
   protected function setMarkup() {
     return '<div class="neo-loader-style neo-loader-double-bounce">
@@ -29,7 +29,7 @@ class LoaderDoubleBounce extends LoaderPluginBase {
   /**
    * Function to set css file.
    *
-   * @inheritdoc
+   * {@inheritdoc}
    */
   protected function setCssFile() {
     return $this->path . '/css/loader/double-bounce.scss';

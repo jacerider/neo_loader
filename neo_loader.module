@@ -126,17 +126,27 @@ function template_preprocess_neo_loader(array &$variables) {
   $loader_manager = \Drupal::service('plugin.manager.neo_loader');
   if ($loader_manager->hasDefinition($variables['loader'])) {
     $instance = $loader_manager->createInstance($variables['loader']);
+    $variables['attributes']['class'][] = 'neo-loader--type-' . $instance->getPluginId();
     $color = $variables['color'] ?? NULL;
-    if (!$color) {
+    if (!$color && $color !== FALSE) {
       $color = $settings->getValue('color');
     }
     if ($color) {
       $bg = 'rgb(var(--color-' . $color . '))';
-      $text = 'rgb(var(--color-' . str_replace('-', '-content-', $color) . '))';
+      $parts = explode('-', $color);
+      $last = array_pop($parts);
+      $parts[] = 'content';
+      $text = 'rgb(var(--color-' . implode('-', $parts) . '-' . $last . '))';
       $variables['attributes']['style'] = '--loader-bg: ' . $bg . '; --loader-text: ' . $text . ';';
     }
     $variables['content']['#attached']['library'][] = 'neo_loader/plugin.' . str_replace('_', '-', $variables['loader']);
-    $variables['content']['loader']['#markup'] = Markup::create($instance->getMarkup());
+    $markup = $instance->getMarkup();
+    if (is_array($markup)) {
+      $variables['content']['loader'] = $markup;
+    }
+    else {
+      $variables['content']['loader']['#markup'] = Markup::create($instance->getMarkup());
+    }
     if (!empty($variables['ajax'])) {
       if (empty($variables['attributes']['id'])) {
         $variables['attributes']['id'] = 'neo-loader-' . uniqid();

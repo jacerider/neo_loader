@@ -17,7 +17,7 @@ class LoaderCircle extends LoaderPluginBase {
   /**
    * Function to set markup.
    *
-   * @inheritdoc
+   * {@inheritdoc}
    */
   protected function setMarkup() {
     return '<div class="neo-loader-style neo-loader-circle">
@@ -39,7 +39,7 @@ class LoaderCircle extends LoaderPluginBase {
   /**
    * Function set css file.
    *
-   * @inheritdoc
+   * {@inheritdoc}
    */
   protected function setCssFile() {
     return $this->path . '/css/loader/circle.scss';

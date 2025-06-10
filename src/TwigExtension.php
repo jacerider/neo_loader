@@ -34,14 +34,15 @@ class TwigExtension extends AbstractExtension {
    *
    * @param string $title
    *   The loader title.
-   * @param string $color
-   *   The loader color. Example: primary-500.
+   * @param string|bool $color
+   *   The loader color. If false, no color will be applied.
+   *   Example: primary-500.
    * @param string $loader
    *   The loader style. Default: 'wave'.
    * @param string $ajax
    *   The URL to load when the loader comes into view. Default: 'false'.
    */
-  public static function renderLoader(?string $title = NULL, ?string $color = NULL, ?string $loader = NULL, ?string $ajax = NULL) {
+  public static function renderLoader(?string $title = NULL, $color = NULL, ?string $loader = NULL, ?string $ajax = NULL) {
     $build = [
       '#theme' => 'neo_loader',
       '#title' => $title,

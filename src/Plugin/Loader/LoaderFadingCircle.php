@@ -17,7 +17,7 @@ class LoaderFadingCircle extends LoaderPluginBase {
   /**
    * Function set markup.
    *
-   * @inheritdoc
+   * {@inheritdoc}
    */
   protected function setMarkup() {
     return '<div class="neo-loader-style neo-loader-fading-circle">
@@ -39,7 +39,7 @@ class LoaderFadingCircle extends LoaderPluginBase {
   /**
    * Function to set css file.
    *
-   * @inheritdoc
+   * {@inheritdoc}
    */
   protected function setCssFile() {
     return $this->path . '/css/loader/fading-circle.scss';

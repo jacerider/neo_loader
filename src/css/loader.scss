@@ -1,7 +1,7 @@
 .neo-loader {
   @apply inline-flex cursor-wait flex-col items-center justify-center gap-3 rounded-lg p-3 text-xs;
-  background-color: var(--loader-bg);
-  color: var(--loader-text);
+  background-color: var(--loader-bg, inherit);
+  color: var(--loader-text, inherit);
   // box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.5);
 
   .neo-loader-title {
@@ -10,6 +10,10 @@
 
   .neo-loader-style {
     @apply relative h-10 min-w-10;
+  }
+
+  &.neo-loader--type-icon {
+    @apply text-inherit;
   }
 }
 
@@ -44,19 +48,19 @@
     left: var(--drupal-displace-offset-left, 0px);
 
     &:after {
-      @apply bg-base-900/70 transition-opacity opacity-0;
-      display: block;
+      @apply bg-base-900/70 opacity-0 transition-opacity;
       position: absolute;
       top: 0;
       right: 0;
-      left: 0;
       bottom: 0;
-      transition-delay: 1000ms;
+      left: 0;
+      display: block;
       content: '';
+      transition-delay: 1000ms;
     }
 
     .neo-loader {
-      @apply -translate-y-full rounded-t-none transition-transform z-10;
+      @apply z-10 -translate-y-full rounded-t-none transition-transform;
 
       .neo-loader-style {
         @apply h-8 min-w-8;
