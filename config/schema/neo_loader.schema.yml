@@ -1,0 +1,22 @@
+neo_loader.settings:
+  type: config_object
+  label: 'Neo Loader Settings'
+  mapping:
+    loader:
+      type: string
+      label: Loader
+    hide_ajax_message:
+      type: boolean
+      label: Hide Ajax Message
+    always_fullscreen:
+      type: boolean
+      label: Always Fullscreen
+    show_admin_paths:
+      type: boolean
+      label: Show Admin Paths
+    loader_position:
+      type: string
+      label: Loader Position
+    color:
+      type: string
+      label: Color
