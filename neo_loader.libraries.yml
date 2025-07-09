@@ -28,3 +28,11 @@ ajax:
     - core/ajax
     - core/once
     - core/drupal
+
+autosubmit:
+  version: VERSION
+  neo: { group: contrib }
+  js:
+    src/js/autosubmit.ts: {}
+  dependencies:
+    - neo_loader/loader

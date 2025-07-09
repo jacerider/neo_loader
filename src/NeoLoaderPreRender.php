@@ -27,11 +27,23 @@ class NeoLoaderPreRender implements TrustedCallbackInterface {
   }
 
   /**
+   * Prerender callback for elements that support autosubmit.
+   */
+  public static function autosubmit($element) {
+    if (!empty($element['#autosubmit'])) {
+      $element['#attached']['library'][] = 'neo_loader/autosubmit';
+      $element['#attributes']['class'][] = 'use-neo-autosubmit';
+    }
+    return $element;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public static function trustedCallbacks() {
     return [
       'loader',
+      'autosubmit',
     ];
   }
 

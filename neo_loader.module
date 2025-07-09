@@ -80,6 +80,14 @@ function neo_loader_element_info_alter(&$info) {
       $info[$type]['#pre_render'] ?? []
     );
   }
+  foreach ($info as $type => &$element) {
+    if (!empty($element['#input'])) {
+      $info[$type]['#pre_render'] = array_merge(
+        [[NeoLoaderPreRender::class, 'autosubmit']],
+        $info[$type]['#pre_render'] ?? []
+      );
+    }
+  }
 }
 
 /**
