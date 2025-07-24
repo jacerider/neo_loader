@@ -19,6 +19,28 @@
                   httpMethod: 'GET',
                 } as any;
                 const ajax = Drupal.ajax(options) as any;
+                // We don't want to use the default error handler as it will
+                // display a message on the page.
+                ajax.error = function (_xmlhttprequest:any, _uri:any, customMessage:any) {
+                  console.error('Error loading content:', customMessage);
+                  // Remove the progress element.
+                  if (this.progress.element) {
+                    $(this.progress.element).remove();
+                  }
+                  if (this.progress.object) {
+                    this.progress.object.stopMonitoring();
+                  }
+                  // Undo hide.
+                  $(this.wrapper).show();
+                  // Re-enable the element.
+                  $(this.element).prop('disabled', false);
+                  // Reattach behaviors, if they were detached in beforeSerialize(), and the
+                  // form is still part of the document.
+                  if (this.$form && document.body.contains(this.$form.get(0))) {
+                    const settings = this.settings || drupalSettings;
+                    Drupal.attachBehaviors(this.$form.get(0), settings);
+                  }
+                };
                 ajax.execute();
               }
             }
