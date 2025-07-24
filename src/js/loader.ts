@@ -65,16 +65,10 @@
       if (loader) {
         loader.classList.add('ajax-hiding');
         if (loader.classList.contains('active')) {
-          const hideCallback = (e:Event) => {
-            if (e.target instanceof HTMLElement) {
-              e.target.removeEventListener('transitionend', hideCallback);
-              e.target.remove();
-            }
-          };
-          loader.addEventListener('transitionend', hideCallback);
+          loader.classList.remove('active');
           setTimeout(() => {
-            loader.classList.remove('active');
-          });
+            loader.remove();
+          }, 150);
         }
         else {
           loader.remove();
