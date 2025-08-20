@@ -42,7 +42,7 @@ class LoaderCircle extends LoaderPluginBase {
    * {@inheritdoc}
    */
   protected function setCssFile() {
-    return $this->path . '/css/loader/circle.scss';
+    return $this->path . '/css/loader/circle.css';
   }
 
 }

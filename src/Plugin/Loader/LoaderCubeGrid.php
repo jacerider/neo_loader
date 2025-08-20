@@ -39,7 +39,7 @@ class LoaderCubeGrid extends LoaderPluginBase {
    * {@inheritdoc}
    */
   protected function setCssFile() {
-    return $this->path . '/css/loader/cube-grid.scss';
+    return $this->path . '/css/loader/cube-grid.css';
   }
 
 }

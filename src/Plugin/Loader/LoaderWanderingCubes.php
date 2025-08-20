@@ -32,7 +32,7 @@ class LoaderWanderingCubes extends LoaderPluginBase {
    * {@inheritdoc}
    */
   protected function setCssFile() {
-    return $this->path . '/css/loader/wandering-cubes.scss';
+    return $this->path . '/css/loader/wandering-cubes.css';
   }
 
 }

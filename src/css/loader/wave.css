@@ -1,9 +1,13 @@
 .neo-loader-style.neo-loader-wave {
-  @apply w-14 text-center text-sm;
+  width: 3.5rem; /* w-14 */
+  text-align: center;
+  font-size: 0.875rem; /* text-sm */
 }
 
 .neo-loader-style.neo-loader-wave .neo-loader-rect {
-  @apply inline-block h-full w-1.5;
+  display: inline-block;
+  height: 100%;
+  width: 0.375rem; /* w-1.5 */
   animation: neo-waveStretchDelay 1.2s infinite ease-in-out;
   background-color: var(--loader-text);
 }

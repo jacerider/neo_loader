@@ -35,7 +35,7 @@ class LoaderWave extends LoaderPluginBase {
    * {@inheritdoc}
    */
   protected function setCssFile() {
-    return $this->path . '/css/loader/wave.scss';
+    return $this->path . '/css/loader/wave.css';
   }
 
 }

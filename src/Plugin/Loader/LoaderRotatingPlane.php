@@ -29,7 +29,7 @@ class LoaderRotatingPlane extends LoaderPluginBase {
    * {@inheritdoc}
    */
   protected function setCssFile() {
-    return $this->path . '/css/loader/rotating-plane.scss';
+    return $this->path . '/css/loader/rotating-plane.css';
   }
 
 }

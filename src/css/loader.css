@@ -1,0 +1,131 @@
+.neo-loader {
+  display: inline-flex;
+  cursor: wait;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem; /* gap-3 */
+  border-radius: 0.5rem; /* rounded-lg */
+  padding: 0.75rem; /* p-3 */
+  font-size: 0.75rem; /* text-xs */
+  background-color: var(--loader-bg, inherit);
+  color: var(--loader-text, inherit);
+
+  .neo-loader-title {
+    margin-top: 0.5rem; /* mt-2 */
+    font-size: 0.75rem; /* text-xs */
+    font-weight: bold; /* font-bold */
+    text-transform: uppercase; /* uppercase */
+    line-height: 1; /* leading-none */
+  }
+
+  .neo-loader-style {
+    position: relative;
+    height: 2.5rem; /* h-10 */
+    min-width: 2.5rem; /* min-w-10 */
+  }
+
+  &.neo-loader--type-icon {
+    color: inherit; /* text-inherit */
+    padding: inherit;
+  }
+}
+
+.ajax-progress {
+  &.ajax-progress-throbber {
+    opacity: 0;
+    transition: opacity 0.2s;
+
+    .neo-loader {
+      flex-direction: row;
+    }
+
+    &.active {
+      opacity: 1;
+    }
+  }
+
+  .ajax-progress-wrapper & {
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: flex;
+    height: 100%;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(var(--loader-bg) / 0.5);
+
+    .neo-loader {
+      position: sticky;
+      bottom: var(--displace-b, auto); /* bottom-displace-b */
+      top: var(--displace-t, auto); /* top-displace-t */
+      background-color: transparent;
+      padding: 0.5rem; /* p-2 */
+    }
+  }
+
+  &.ajax-progress-fullscreen {
+    position: fixed;
+    left: 0;
+    display: flex;
+    height: 100%;
+    width: 100%;
+    cursor: wait;
+    flex-direction: column;
+    align-items: center;
+    opacity: 0;
+    transition: all 0.2s;
+    z-index: 49;
+    top: var(--drupal-displace-offset-top, 0px);
+    right: var(--drupal-displace-offset-right, 0px);
+    bottom: var(--drupal-displace-offset-bottom, 0px);
+    left: var(--drupal-displace-offset-left, 0px);
+
+    &:after {
+      background-color: rgba(30, 41, 59, 0.7); /* bg-base-900/70 */
+      opacity: 0;
+      transition: opacity 0.2s;
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      display: block;
+      content: '';
+      transition-delay: 1000ms;
+    }
+
+    .neo-loader {
+      z-index: 10;
+      transform: translateY(-100%);
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+      transition: transform 0.2s;
+
+      .neo-loader-style {
+        height: 2rem; /* h-8 */
+        min-width: 2rem; /* min-w-8 */
+      }
+    }
+
+    &.active {
+      opacity: 1;
+      transition-duration: 0.3s;
+
+      &:after {
+        opacity: 1;
+        transition-duration: 2s;
+      }
+
+      .neo-loader {
+        transform: translateY(0);
+        transition-duration: 0.3s;
+      }
+    }
+  }
+}
+
+.ajax-progress-wrapper {
+  position: relative;
+}

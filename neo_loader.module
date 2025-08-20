@@ -141,14 +141,14 @@ function template_preprocess_neo_loader(array &$variables) {
     }
     if ($color) {
       $bg = 'rgb(var(--color-' . $color . '))';
-      $parts = explode('-', $color);
-      $last = array_pop($parts);
-      $parts[] = 'content';
-      $text = 'rgb(var(--color-' . implode('-', $parts) . '-' . $last . '))';
+      $text = 'rgb(var(--color-' . $color . '-content))';
       $variables['attributes']['style'] = '--loader-bg: ' . $bg . '; --loader-text: ' . $text . ';';
     }
     $variables['content']['#attached']['library'][] = 'neo_loader/plugin.' . str_replace('_', '-', $variables['loader']);
     $markup = $instance->getMarkup();
+    // if (\Drupal::request()->get('_wrapper_format')) {
+    //   unset($variables['content']['#attached']);
+    // }
     if (is_array($markup)) {
       $variables['content']['loader'] = $markup;
     }

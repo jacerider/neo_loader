@@ -1,5 +1,9 @@
 .neo-loader-style.neo-loader-wandering-cubes .neo-loader-cube {
-  @apply absolute left-0 top-0 h-3 w-3;
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 0.75rem; /* h-3 */
+  width: 0.75rem; /* w-3 */
   animation: neo-wanderingCube 1.8s ease-in-out -1.8s infinite both;
   background-color: var(--loader-text);
 }

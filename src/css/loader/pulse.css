@@ -1,5 +1,5 @@
 .neo-loader-style.neo-loader-spinner-pulse {
-  @apply rounded-full;
+  border-radius: 9999px; /* rounded-full */
   position: inherit;
   animation: neo-pulseScaleOut 1s infinite ease-in-out;
   background-color: var(--loader-text);

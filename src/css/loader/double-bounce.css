@@ -1,5 +1,11 @@
 .neo-loader-style.neo-loader-double-bounce .neo-loader-child {
-  @apply absolute left-0 top-0 h-full w-full rounded-full opacity-60;
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  border-radius: 9999px; /* rounded-full */
+  opacity: 0.6;
   animation: neo-doubleBounce 2s infinite ease-in-out;
   background-color: var(--loader-text);
 }

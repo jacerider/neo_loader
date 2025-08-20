@@ -32,7 +32,7 @@ class LoaderChasingDots extends LoaderPluginBase {
    * {@inheritdoc}
    */
   protected function setCssFile() {
-    return $this->path . '/css/loader/chasing-dots.scss';
+    return $this->path . '/css/loader/chasing-dots.css';
   }
 
 }

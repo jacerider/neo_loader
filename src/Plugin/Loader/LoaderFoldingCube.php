@@ -34,7 +34,7 @@ class LoaderFoldingCube extends LoaderPluginBase {
    * {@inheritdoc}
    */
   protected function setCssFile() {
-    return $this->path . '/css/loader/folding-cube.scss';
+    return $this->path . '/css/loader/folding-cube.css';
   }
 
 }

@@ -1,10 +1,13 @@
 .neo-loader-style.neo-loader-chasing-dots {
-  @apply text-center;
+  text-align: center;
   animation: neo-chasingDotsRotate 2s infinite linear;
 }
 
 .neo-loader-style.neo-loader-chasing-dots .neo-loader-child {
-  @apply absolute top-0 inline-block rounded-full;
+  position: absolute;
+  top: 0;
+  display: inline-block;
+  border-radius: 9999px; /* rounded-full */
   width: 60%;
   height: 60%;
   animation: neo-chasingDotsBounce 2s infinite ease-in-out;
@@ -12,7 +15,8 @@
 }
 
 .neo-loader-style.neo-loader-chasing-dots .neo-loader-dot2 {
-  @apply bottom-0 top-auto;
+  bottom: 0;
+  top: auto;
   animation-delay: -1s;
 }
 

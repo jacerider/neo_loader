@@ -1,9 +1,9 @@
 loader:
   version: VERSION
-  neo: { group: contrib }
+  neo: true
   css:
     component:
-      src/css/loader.scss: {}
+      src/css/loader.css: {}
   js:
     src/js/loader.ts: {}
   dependencies:
@@ -13,7 +13,7 @@ loader:
 
 loader-ajax:
   version: VERSION
-  neo: { group: contrib }
+  neo: true
   js:
     src/js/loader-ajax.js: {}
   dependencies:
@@ -21,7 +21,7 @@ loader-ajax:
 
 ajax:
   version: VERSION
-  neo: { group: contrib }
+  neo: true
   js:
     src/js/ajax.ts: {}
   dependencies:
@@ -31,7 +31,7 @@ ajax:
 
 autosubmit:
   version: VERSION
-  neo: { group: contrib }
+  neo: true
   js:
     src/js/autosubmit.ts: {}
   dependencies:

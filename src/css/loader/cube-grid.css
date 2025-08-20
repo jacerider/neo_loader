@@ -3,7 +3,9 @@
 }
 
 .neo-loader-style.neo-loader-cube-grid .neo-loader-cube {
-  @apply float-left h-1/3 w-1/3;
+  float: left;
+  height: 33.3333%; /* h-1/3 */
+  width: 33.3333%; /* w-1/3 */
   animation: neo-cubeGridScaleDelay 1.3s infinite ease-in-out;
   background-color: var(--loader-text);
 }

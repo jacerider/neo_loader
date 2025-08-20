@@ -29,7 +29,7 @@ class LoaderPulse extends LoaderPluginBase {
    * {@inheritdoc}
    */
   protected function setCssFile() {
-    return $this->path . '/css/loader/pulse.scss';
+    return $this->path . '/css/loader/pulse.css';
   }
 
 }

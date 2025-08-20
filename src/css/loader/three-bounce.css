@@ -1,9 +1,14 @@
 .neo-loader-style.neo-loader-three-bounce {
-  @apply h-5 w-20 text-center;
+  height: 1.25rem; /* h-5 */
+  width: 5rem; /* w-20 */
+  text-align: center;
 }
 
 .neo-loader-style.neo-loader-three-bounce .neo-loader-child {
-  @apply inline-block h-5 w-5 rounded-full;
+  display: inline-block;
+  height: 1.25rem; /* h-5 */
+  width: 1.25rem; /* w-5 */
+  border-radius: 9999px; /* rounded-full */
   animation: neo-three-bounce 1.4s ease-in-out 0s infinite both;
   background-color: var(--loader-text);
 }

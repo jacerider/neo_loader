@@ -42,7 +42,7 @@ class LoaderIcon extends LoaderPluginBase {
    * {@inheritdoc}
    */
   protected function setCssFile() {
-    return $this->path . '/css/loader/icon.scss';
+    return $this->path . '/css/loader/icon.css';
   }
 
 }

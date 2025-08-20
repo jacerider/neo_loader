@@ -32,7 +32,7 @@ class LoaderDoubleBounce extends LoaderPluginBase {
    * {@inheritdoc}
    */
   protected function setCssFile() {
-    return $this->path . '/css/loader/double-bounce.scss';
+    return $this->path . '/css/loader/double-bounce.css';
   }
 
 }

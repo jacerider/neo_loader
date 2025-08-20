@@ -1,16 +1,22 @@
 .neo-loader-style.neo-loader-folding-cube {
-  @apply m-2;
+  margin: 0.5rem; /* m-2 */
   transform: rotateZ(45deg);
 }
 
 .neo-loader-style.neo-loader-folding-cube .neo-loader-cube {
-  @apply relative float-left h-1/2 w-1/2;
   position: relative;
+  float: left;
+  height: 50%; /* h-1/2 */
+  width: 50%; /* w-1/2 */
   transform: scale(1.1);
 }
 
 .neo-loader-style.neo-loader-folding-cube .neo-loader-cube:before {
-  @apply absolute left-0 top-0 h-full w-full;
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
   animation: neo-foldCubeAngle 2.4s infinite linear both;
   background-color: var(--loader-text);
   content: '';

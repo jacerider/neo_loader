@@ -33,7 +33,7 @@ class LoaderThreeBounce extends LoaderPluginBase {
    * {@inheritdoc}
    */
   protected function setCssFile() {
-    return $this->path . '/css/loader/three-bounce.scss';
+    return $this->path . '/css/loader/three-bounce.css';
   }
 
 }
