@@ -146,9 +146,6 @@ function template_preprocess_neo_loader(array &$variables) {
     }
     $variables['content']['#attached']['library'][] = 'neo_loader/plugin.' . str_replace('_', '-', $variables['loader']);
     $markup = $instance->getMarkup();
-    // if (\Drupal::request()->get('_wrapper_format')) {
-    //   unset($variables['content']['#attached']);
-    // }
     if (is_array($markup)) {
       $variables['content']['loader'] = $markup;
     }
