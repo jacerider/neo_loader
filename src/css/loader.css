@@ -85,7 +85,7 @@
     background: transparent;
 
     &:after {
-      @apply bg-site/90;
+      @apply bg-base-900/90;
       opacity: 0;
       transition: opacity 0.2s;
       position: absolute;
