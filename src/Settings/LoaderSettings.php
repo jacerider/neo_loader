@@ -167,7 +167,37 @@ final class LoaderSettings extends SettingsBase {
       '#default_value' => $this->getValue('color'),
     ];
 
+    $form['test'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Test loader'),
+      '#submit' => [[__CLASS__, 'submitLoaderSubmit']],
+      '#limit_validation_errors' => [],
+      '#id' => 'neo-loader-test',
+      '#attributes' => [
+        'class' => ['btn btn-xs'],
+      ],
+      '#ajax' => [
+        'callback' => [__CLASS__, 'ajaxLoaderTest'],
+        'wrapper' => 'neo-loader-test',
+      ],
+    ];
+
     return $form;
+  }
+
+  /**
+   * Submit handler for the loader test button.
+   */
+  public static function submitLoaderSubmit(array &$form, FormStateInterface $form_state) {
+    // Intentionally left empty.
+    sleep(20);
+  }
+
+  /**
+   * Ajax handler for the test loader button.
+   */
+  public static function ajaxLoaderTest(array &$form, FormStateInterface $form_state) {
+    return $form['instance']['test'];
   }
 
   /**
