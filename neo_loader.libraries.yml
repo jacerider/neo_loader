@@ -25,9 +25,9 @@ ajax:
   js:
     src/js/ajax.ts: {}
   dependencies:
-    - core/ajax
     - core/once
     - core/drupal
+    - core/drupal.ajax
 
 autosubmit:
   version: VERSION
