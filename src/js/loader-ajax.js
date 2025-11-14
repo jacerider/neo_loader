@@ -77,7 +77,9 @@
     Drupal.Ajax.prototype.success = function (response, status) {
       var _this = this;
       const callback = function () {
-        _this.progress.element = null;
+        if (_this.progress.element) {
+          _this.progress.element = null;
+        }
         // var closest = $(_this.progress.element).closest('.ajax-progress-wrapper');
         // if (closest.length) {
         //   closest.removeClass('ajax-progress-wrapper');
