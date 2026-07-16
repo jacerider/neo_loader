@@ -18,6 +18,15 @@ loader-ajax:
     src/js/loader-ajax.js: {}
   dependencies:
     - neo_loader/loader
+    # The chunk is invoked with (jQuery, ..., Drupal, drupalSettings).
+    - core/jquery
+    # Deliberately NOT core/drupal.ajax: neo_loader_library_info_alter() makes
+    # drupal.ajax depend on this library, so declaring it back is a cycle that
+    # hangs library resolution. That inversion is why this library loads before
+    # Drupal.Ajax exists, and why the chunk polls for it instead of using it
+    # directly.
+    #
+    # @see neo_loader_library_info_alter()
 
 ajax:
   version: VERSION
