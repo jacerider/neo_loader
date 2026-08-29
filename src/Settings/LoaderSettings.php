@@ -117,16 +117,30 @@ final class LoaderSettings extends SettingsBase {
       ],
     ];
 
-    $parts = explode('-', $this->getValue('color'));
-    $last = array_pop($parts);
-    $parts[] = 'content';
-    $loader_id = $this->getValue('loader');
+    // The preview wrapper exists to supply one thing: a colour. The loader
+    // element inside it already carries its own inline --loader-text, which
+    // eleven of the twelve loaders paint their shapes with, so the only loader
+    // this wrapper can reach is the icon loader — declared color: inherit, and
+    // so reading the enclosing colour and nothing else.
+    //
+    // The colour it inherits is the contrast colour neo_color emits for the
+    // configured loader colour: that value's own token name with '-content'
+    // appended, spelled here exactly as template_preprocess_neo_loader()
+    // spells it. It is written as an inline declaration rather than as a
+    // utility class because utilities are compiled from literals found in
+    // scanned source, and a class assembled in PHP is not one.
+    $color = $this->getValue('color');
     $form['wrapper']['preview'] = [
+      '#type' => 'container',
+      '#attributes' => [],
+    ];
+    if ($color) {
+      $form['wrapper']['preview']['#attributes']['style'] = 'color: rgb(var(--color-' . $color . '-content));';
+    }
+    $form['wrapper']['preview']['loader'] = [
       '#theme' => 'neo_loader',
-      '#loader' => $loader_id,
+      '#loader' => $this->getValue('loader'),
       '#title' => '',
-      '#prefix' => '<div class="text-' . implode('-', $parts) . '-' . $last . '">',
-      '#suffix' => '</div>',
     ];
 
     $form['hide_ajax_message'] = [
