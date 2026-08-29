@@ -27,4 +27,26 @@ interface LoaderManagerInterface extends PluginManagerInterface, CachedDiscovery
    */
   public function createInstances();
 
+  /**
+   * Gets a loader's stylesheet.
+   *
+   * The manager owns this question rather than the loader, so that a loader
+   * can no longer disagree with the file sitting next to it on disk. The
+   * definition's `css` when it declares one, and otherwise the path derived
+   * from the id. A class-based loader that declares none is instantiated and
+   * asked, which is what keeps an existing third-party loader's stylesheet
+   * exactly where it was.
+   *
+   * @param string $id
+   *   The loader id.
+   *
+   * @return string
+   *   The stylesheet path, relative to the extension that declared the
+   *   loader.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   *   When no loader is defined for the id.
+   */
+  public function getCssFile(string $id): string;
+
 }

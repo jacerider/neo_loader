@@ -34,9 +34,10 @@ class LoaderDefault extends LoaderPluginBase {
    * {@inheritdoc}
    *
    * Passed straight through from the declaration, and empty when it declared
-   * none. Deriving the stylesheet from the id belongs to the manager rather
-   * than to a plugin, so this stays a pass-through until the manager owns the
-   * question.
+   * none. The manager owns the stylesheet question and derives the path from
+   * the id, so this deliberately does not: a declaration's plugin is never
+   * built to be asked, and this only exists to keep the deprecated accessor
+   * answering the declaration's own value.
    */
   protected function setCssFile() {
     return $this->pluginDefinition['css'] ?? '';

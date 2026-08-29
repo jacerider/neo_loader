@@ -142,8 +142,8 @@ final class LoaderDeclarationTest extends LoaderKernelTestBase {
       $this->loaderManager()->getLoaderOptionList(),
     );
 
-    // One order, not two lists concatenated: the four declared labels and the
-    // theme's fifth land between class-based neighbours on both sides. The
+    // One order, not two lists concatenated: the five declared labels and the
+    // theme's sixth land between class-based neighbours on both sides. The
     // fixture file writes them out of order on purpose, so agreeing with the
     // file rather than sorting it would fail here.
     //
@@ -163,6 +163,7 @@ final class LoaderDeclarationTest extends LoaderKernelTestBase {
       'neo_loader_test_attribute' => 'Test attribute',
       'neo_loader_test_collision' => 'Test collision',
       'neo_loader_test_declaration' => 'Test declaration',
+      'neo_loader_test_declared_css' => 'Test declared css',
       'neo_loader_test_theme_declaration' => 'Test theme declaration',
       'three_bounce' => 'Three bounce',
       'wandering_cubes' => 'Wandering cubes',

@@ -17,6 +17,12 @@ interface LoaderPluginInterface extends PluginInspectionInterface, DerivativeIns
 
   /**
    * Returns path to css file.
+   *
+   * @deprecated in neo_loader:1.1.0 and is removed from neo_loader:2.0.0. Use
+   *   \Drupal\neo_loader\LoaderManagerInterface::getCssFile() instead.
+   *
+   * @phpcs:ignore Drupal.Commenting.Deprecated.DeprecatedWrongSeeUrlFormat
+   * @see \Drupal\neo_loader\LoaderManagerInterface::getCssFile()
    */
   public function getCssFile();
 

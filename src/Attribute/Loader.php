@@ -27,10 +27,18 @@ final class Loader extends AttributeBase {
    *   The plugin ID.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $label
    *   (optional) The human-readable name of the loader.
+   * @param string $css
+   *   (optional) The loader's stylesheet, relative to the declaring extension.
+   *   Declaring one is what keeps a class-based loader out of the manager's
+   *   instantiating fallback: the answer is on the definition, so nothing has
+   *   to be constructed to read it. Left empty, the manager derives
+   *   `src/css/loader/{id}.css` instead, which is the right answer for every
+   *   loader whose stylesheet sits where the rule says it does.
    */
   public function __construct(
     public readonly string $id,
     public readonly ?TranslatableMarkup $label = NULL,
+    public readonly string $css = '',
   ) {}
 
 }

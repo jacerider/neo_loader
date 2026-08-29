@@ -34,14 +34,31 @@ function neo_loader_library_info_build() {
   $libraries = [];
   /** @var \Drupal\neo_loader\LoaderManagerInterface $loader_manager */
   $loader_manager = \Drupal::service('plugin.manager.neo_loader');
-  foreach ($loader_manager->createInstances() as $loaderId => $instance) {
+  /** @var \Drupal\Core\Extension\ModuleExtensionList $module_list */
+  $module_list = \Drupal::service('extension.list.module');
+  /** @var \Drupal\Core\Extension\ThemeExtensionList $theme_list */
+  $theme_list = \Drupal::service('extension.list.theme');
+  // Definitions, not instances: the stylesheet is a question the manager
+  // answers from the definition, so building the libraries no longer costs one
+  // object per loader on every cache rebuild.
+  foreach ($loader_manager->getDefinitions() as $loaderId => $definition) {
+    $css = $loader_manager->getCssFile($loaderId);
+    $provider = $definition['provider'] ?? 'neo_loader';
+    // Every library here is owned by `neo_loader`, so a path relative to some
+    // other declaring extension would be resolved against the wrong one. Only
+    // the emission is adapted; the path the manager answered stays relative to
+    // whoever declared it.
+    if ($provider !== 'neo_loader' && $css !== '' && !str_starts_with($css, '/') && !str_contains($css, '://')) {
+      $path = $module_list->exists($provider) ? $module_list->getPath($provider) : $theme_list->getPath($provider);
+      $css = '/' . $path . '/' . $css;
+    }
     $libraries['plugin.' . str_replace('_', '-', $loaderId)] = [
       'neo' => [
         'group' => 'contrib',
       ],
       'css' => [
         'base' => [
-          $instance->getCssFile() => [],
+          $css => [],
         ],
       ],
     ];

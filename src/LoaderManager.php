@@ -125,6 +125,54 @@ class LoaderManager extends DefaultPluginManager implements LoaderManagerInterfa
   /**
    * {@inheritdoc}
    */
+  public function getCssFile(string $id): string {
+    $definition = $this->getDefinition($id);
+    if (!empty($definition['css'])) {
+      return (string) $definition['css'];
+    }
+    // A loader written as a class before the stylesheet moved onto the
+    // definition still answers the question itself, and is instantiated to be
+    // asked. That is what keeps a third-party loader's stylesheet exactly
+    // where it is; a definition that declares `css` never gets here, which is
+    // why the icon loader declares one.
+    if (($definition['class'] ?? LoaderDefault::class) !== LoaderDefault::class) {
+      $instance = $this->createInstance($id);
+      if ($instance instanceof LoaderPluginInterface) {
+        // Deliberately the deprecated accessor: asking it is the whole point
+        // of the fallback, and it is what keeps such a loader working.
+        // @phpstan-ignore method.deprecated
+        $css = (string) $instance->getCssFile();
+        if ($css !== '') {
+          return $css;
+        }
+      }
+    }
+    return static::deriveCssFile($id);
+  }
+
+  /**
+   * Derives a loader's stylesheet path from its id.
+   *
+   * The rule twelve `setCssFile()` bodies used to restate by hand, stated
+   * once: `src/css/loader/{id}.css` inside the declaring extension, with the
+   * id's underscores written as dashes. It is relative on purpose — the
+   * declaring extension is what it is relative to, and adapting that for a
+   * library owned by `neo_loader` belongs to the emission point rather than
+   * to the rule.
+   *
+   * @param string $id
+   *   The loader id.
+   *
+   * @return string
+   *   The stylesheet path, relative to the declaring extension.
+   */
+  public static function deriveCssFile(string $id): string {
+    return 'src/css/loader/' . str_replace('_', '-', $id) . '.css';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getLoaderOptionList() {
     $options = [];
     foreach ($this->getDefinitions() as $definition) {

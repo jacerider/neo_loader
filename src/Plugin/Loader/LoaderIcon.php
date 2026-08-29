@@ -13,6 +13,12 @@ use Drupal\neo_loader\Plugin\LoaderPluginBase;
 #[Loader(
   id: 'icon',
   label: new TranslatableMarkup('Icon'),
+  // The one shipped loader that has to declare this. Every other definition
+  // either is a declaration or agrees with the derived path, but a class
+  // plugin declaring no `css` is instantiated to be asked — and instantiating
+  // this one drags `neo_icon`'s icon trait into library discovery, which is
+  // half of what moving the stylesheet onto the definition is for.
+  css: 'src/css/loader/icon.css',
 )]
 class LoaderIcon extends LoaderPluginBase {
 

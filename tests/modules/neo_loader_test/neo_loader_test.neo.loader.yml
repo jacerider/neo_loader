@@ -19,3 +19,11 @@ neo_loader_test_collision:
 neo_loader_test_sort_2:
   label: 'Wave 2'
   markup: '<div class="neo-loader-test-sort-2"></div>'
+# Declares a stylesheet of its own, and one the derivation would never
+# produce: `src/css/loader/neo-loader-test-declared-css.css` is the derived
+# answer, so a test can tell a declared path winning apart from the rule
+# happening to agree.
+neo_loader_test_declared_css:
+  label: 'Test declared css'
+  markup: '<div class="neo-loader-test-declared-css"></div>'
+  css: 'src/css/loader/declared.css'
