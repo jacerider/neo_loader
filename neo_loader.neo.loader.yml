@@ -1,0 +1,118 @@
+# The loaders `neo_loader` ships.
+#
+# A loader whose whole content is a fixed block of markup is data, not a
+# class: eleven of the module's twelve carried nothing but the string below
+# and a filename that restated a rule. The filename is the manager's business
+# now — none of these declares a `css`, so every one of them takes the derived
+# `src/css/loader/{id}.css` — and the string is here.
+#
+# The icon loader is deliberately absent. Its markup is computed rather than
+# fixed, so it stays a class plugin, which is what the class-based form is for.
+#
+# @see \Drupal\neo_loader\LoaderManager
+# @see \Drupal\neo_loader\LoaderDefault
+chasing_dots:
+  label: 'Chasing dots'
+  markup: |-
+    <div class="neo-loader-style neo-loader-chasing-dots">
+                  <div class="neo-loader-child neo-loader-dot1"></div>
+                  <div class="neo-loader-child neo-loader-dot2"></div>
+                </div>
+circle:
+  label: 'Circle'
+  markup: |-
+    <div class="neo-loader-style neo-loader-circle">
+                  <div class="neo-loader-circle1 neo-loader-child"></div>
+                  <div class="neo-loader-circle2 neo-loader-child"></div>
+                  <div class="neo-loader-circle3 neo-loader-child"></div>
+                  <div class="neo-loader-circle4 neo-loader-child"></div>
+                  <div class="neo-loader-circle5 neo-loader-child"></div>
+                  <div class="neo-loader-circle6 neo-loader-child"></div>
+                  <div class="neo-loader-circle7 neo-loader-child"></div>
+                  <div class="neo-loader-circle8 neo-loader-child"></div>
+                  <div class="neo-loader-circle9 neo-loader-child"></div>
+                  <div class="neo-loader-circle10 neo-loader-child"></div>
+                  <div class="neo-loader-circle11 neo-loader-child"></div>
+                  <div class="neo-loader-circle12 neo-loader-child"></div>
+                </div>
+# Misspelled since the loader shipped, and kept as shipped: the label is what
+# the settings form shows, so correcting it is a visible change and belongs to
+# a ticket that says so.
+cube_grid:
+  label: 'Cube gird'
+  markup: |-
+    <div class="neo-loader-style neo-loader-cube-grid">
+                  <div class="neo-loader-cube neo-loader-cube1"></div>
+                  <div class="neo-loader-cube neo-loader-cube2"></div>
+                  <div class="neo-loader-cube neo-loader-cube3"></div>
+                  <div class="neo-loader-cube neo-loader-cube4"></div>
+                  <div class="neo-loader-cube neo-loader-cube5"></div>
+                  <div class="neo-loader-cube neo-loader-cube6"></div>
+                  <div class="neo-loader-cube neo-loader-cube7"></div>
+                  <div class="neo-loader-cube neo-loader-cube8"></div>
+                  <div class="neo-loader-cube neo-loader-cube9"></div>
+                </div>
+double_bounce:
+  label: 'Double bounce'
+  markup: |-
+    <div class="neo-loader-style neo-loader-double-bounce">
+                    <div class="neo-loader-child neo-loader-double-bounce1"></div>
+                    <div class="neo-loader-child neo-loader-double-bounce2"></div>
+                </div>
+fading_circle:
+  label: 'Fading circle'
+  markup: |-
+    <div class="neo-loader-style neo-loader-fading-circle">
+                  <div class="neo-loader-circle1 neo-loader-circle"></div>
+                  <div class="neo-loader-circle2 neo-loader-circle"></div>
+                  <div class="neo-loader-circle3 neo-loader-circle"></div>
+                  <div class="neo-loader-circle4 neo-loader-circle"></div>
+                  <div class="neo-loader-circle5 neo-loader-circle"></div>
+                  <div class="neo-loader-circle6 neo-loader-circle"></div>
+                  <div class="neo-loader-circle7 neo-loader-circle"></div>
+                  <div class="neo-loader-circle8 neo-loader-circle"></div>
+                  <div class="neo-loader-circle9 neo-loader-circle"></div>
+                  <div class="neo-loader-circle10 neo-loader-circle"></div>
+                  <div class="neo-loader-circle11 neo-loader-circle"></div>
+                  <div class="neo-loader-circle12 neo-loader-circle"></div>
+                </div>
+folding_cube:
+  label: 'Folding cube'
+  markup: |-
+    <div class="neo-loader-style neo-loader-folding-cube">
+                  <div class="neo-loader-cube1 neo-loader-cube"></div>
+                  <div class="neo-loader-cube2 neo-loader-cube"></div>
+                  <div class="neo-loader-cube4 neo-loader-cube"></div>
+                  <div class="neo-loader-cube3 neo-loader-cube"></div>
+                </div>
+pulse:
+  label: 'Pulse'
+  markup: '<div class="neo-loader-style neo-loader-spinner neo-loader-spinner-pulse"></div>'
+rotating_plane:
+  label: 'Rotating plane'
+  markup: '<div class="neo-loader-style neo-loader-rotating-plane"></div>'
+three_bounce:
+  label: 'Three bounce'
+  markup: |-
+    <div class="neo-loader-style neo-loader-three-bounce">
+                  <div class="neo-loader-child neo-loader-bounce1"></div>
+                  <div class="neo-loader-child neo-loader-bounce2"></div>
+                  <div class="neo-loader-child neo-loader-bounce3"></div>
+                </div>
+wandering_cubes:
+  label: 'Wandering cubes'
+  markup: |-
+    <div class="neo-loader-style neo-loader-wandering-cubes">
+                  <div class="neo-loader-cube neo-loader-cube1"></div>
+                  <div class="neo-loader-cube neo-loader-cube2"></div>
+                </div>
+wave:
+  label: 'Wave'
+  markup: |-
+    <div class="neo-loader-style neo-loader-wave">
+                  <div class="neo-loader-rect neo-loader-rect1"></div>
+                  <div class="neo-loader-rect neo-loader-rect2"></div>
+                  <div class="neo-loader-rect neo-loader-rect3"></div>
+                  <div class="neo-loader-rect neo-loader-rect4"></div>
+                  <div class="neo-loader-rect neo-loader-rect5"></div>
+                </div>
