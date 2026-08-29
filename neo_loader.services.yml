@@ -2,6 +2,10 @@ services:
   plugin.manager.neo_loader:
     class: Drupal\neo_loader\LoaderManager
     parent: default_plugin_manager
+    # Appended to the parent's three, because a numeric key on a child
+    # definition appends rather than replaces. Themes declare loaders, so the
+    # manager needs the theme list to scan and to check providers against.
+    arguments: ['@theme_handler']
   neo_loader.settings:
     parent: neo_settings.repository
     arguments: ['neo_loader']

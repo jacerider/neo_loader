@@ -1,0 +1,7 @@
+# A theme's loader declaration.
+#
+# Themes declare in exactly the shape modules do, so provider existence has to
+# be satisfied by an installed theme as well as by an installed module.
+neo_loader_test_theme_declaration:
+  label: 'Test theme declaration'
+  markup: '<div class="neo-loader-test-theme-declaration"></div>'

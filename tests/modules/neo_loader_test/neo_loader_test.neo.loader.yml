@@ -1,0 +1,21 @@
+# Loader declarations for the neo_loader test suite.
+#
+# Declared by an extension other than `neo_loader` on purpose: a declaration
+# inside the module itself would prove that discovery reads its own directory,
+# not that it reads a site's. The entries are deliberately written out of
+# label order, so that the manager's natural sort has work to do.
+neo_loader_test_sort_10:
+  label: 'Wave 10'
+  markup: '<div class="neo-loader-test-sort-10"></div>'
+neo_loader_test_declaration:
+  label: 'Test declaration'
+  markup: '<div class="neo-loader-test-declaration"></div>'
+# Claims the id `LoaderTestCollision` also claims. The declaration is expected
+# to win; nothing in the stack collides today, and the fixture exists so the
+# answer is defined rather than incidental.
+neo_loader_test_collision:
+  label: 'Test collision'
+  markup: '<div class="neo-loader-test-collision-declaration"></div>'
+neo_loader_test_sort_2:
+  label: 'Wave 2'
+  markup: '<div class="neo-loader-test-sort-2"></div>'

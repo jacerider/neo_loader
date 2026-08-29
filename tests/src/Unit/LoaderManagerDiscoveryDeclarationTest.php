@@ -6,6 +6,7 @@ namespace Drupal\Tests\neo_loader\Unit;
 
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\neo_loader\LoaderManager;
 use PHPUnit\Framework\Attributes\Group;
@@ -42,6 +43,7 @@ final class LoaderManagerDiscoveryDeclarationTest extends UnitTestCase {
         new \ArrayObject([]),
         $this->createMock(CacheBackendInterface::class),
         $this->createMock(ModuleHandlerInterface::class),
+        $this->createMock(ThemeHandlerInterface::class),
       );
     }
     finally {
