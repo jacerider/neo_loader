@@ -2,21 +2,25 @@
 
   'use strict';
 
-  // Because this script is loaded before drupal.ajax.js we need to wait for
-  // it to be loaded before we can override the ajax object.
-  const watchAjax = function () {
-    if (typeof Drupal.Ajax !== 'undefined') {
-      // If the ajax object is already defined, we can just return.
-      initAjaxOverrides();
+  /**
+   * Installs the ajax progress override on core's ajax prototype.
+   *
+   * Declines while core's ajax script has not run yet, and declines again once
+   * the override is in place: each of the five patches stashes the method it
+   * replaces under a fixed `…Original` property and resolves that property at
+   * call time, so applying them twice would make each patched method its own
+   * predecessor and the next ajax request would recurse until the stack ends.
+   * The first stash property still being undefined is the sentinel for all
+   * five, since they are installed together or not at all. It is read off the
+   * prototype rather than held in a variable here, because a flag inside this
+   * chunk would not survive a second copy of the chunk in the same document
+   * and the prototype does.
+   */
+  const initAjaxOverrides = function () {
+    if (typeof Drupal.Ajax === 'undefined' || typeof Drupal.Ajax.prototype.beforeSendOriginal !== 'undefined') {
       return;
     }
-    // If the ajax object is not defined, we need to wait for it to be defined.
-    setTimeout(function () {
-      watchAjax();
-    }, 10);
-  }
 
-  const initAjaxOverrides = function () {
     /**
      * Prepare the Ajax request before it is sent.
      *
@@ -94,6 +98,27 @@
     };
   };
 
-  watchAjax();
+  // Try once, immediately. This only succeeds in Neo dev mode, where the chunk
+  // is served as a deferred ES module and so already runs after core's ajax
+  // script; in a production build core's ajax script has not run yet and this
+  // declines. It exists so the override does not depend on
+  // Drupal.attachBehaviors ever being called.
+  initAjaxOverrides();
+
+  /**
+   * Installs the ajax progress override on the first behaviour pass.
+   *
+   * The pass runs after every script in the document and before core's own
+   * ajax behaviour has bound anything, which is the ordering this library
+   * needs and cannot declare, because it is loaded before core's ajax script
+   * by design.
+   *
+   * @type {Drupal~behavior}
+   */
+  Drupal.behaviors.neoLoaderAjaxProgressOverride = {
+    attach: function () {
+      initAjaxOverrides();
+    }
+  };
 
 })(jQuery, this, Drupal, drupalSettings);
