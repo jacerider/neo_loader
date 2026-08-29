@@ -8,6 +8,7 @@
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Url;
 use Drupal\neo_loader\NeoLoaderPreRender;
+use Drupal\neo_loader\Settings\LoaderSettings;
 
 /**
  * Implements hook_theme().
@@ -74,7 +75,7 @@ function neo_loader_library_info_alter(&$libraries, $module) {
     $libraries['drupal.ajax']['dependencies'][] = 'neo_loader/loader-ajax';
   }
   if ($module == 'neo_loader') {
-    /** @var \Drupal\neo_loader\Settings\Settings $settings */
+    /** @var \Drupal\neo_loader\Settings\LoaderSettings $settings */
     $settings = \Drupal::service('neo_loader.settings')->getActive();
     if ($loaderId = $settings->getValue('loader')) {
       $libraries['loader']['dependencies'][] = 'neo_loader/plugin.' . str_replace('_', '-', $loaderId);
@@ -111,8 +112,16 @@ function neo_loader_element_info_alter(&$info) {
  * Implements hook_page_attachments().
  */
 function neo_loader_page_attachments(array &$page) {
-  /** @var \Drupal\neo_loader\Settings\Settings $settings */
+  /** @var \Drupal\neo_loader\Settings\LoaderSettings $settings */
   $settings = \Drupal::service('neo_loader.settings')->getActive();
+  // The repository promises only the settings interface, and route
+  // applicability is declared on the loader settings plugin alone. A plugin
+  // that disallows variations always answers with its core instance, so this
+  // holds on every request today; the guard is what makes the assumption
+  // checkable rather than assumed.
+  if (!$settings instanceof LoaderSettings) {
+    return;
+  }
   if (($loaderId = $settings->getValue('loader')) && $settings->routeIsApplicable()) {
     /** @var \Drupal\Core\Render\Renderer $renderer */
     $renderer = \Drupal::service('renderer');
