@@ -90,8 +90,20 @@ demo".
 
 **Loader test** — the settings form's "Test loader" control, which fires a no-op ajax round trip
 so the **active loader** appears through the same progress-indicator path every ajax request on
-the site uses, as an overlay rather than in place. _Avoid:_ "the preview", "the test button" used
-for the **loader preview**.
+the site uses, as a **held overlay** rather than in place. _Avoid:_ "the preview", "the test
+button" used for the **loader preview**.
+
+**Held overlay** — a fullscreen loader overlay that stays on screen after its request's response
+has landed, instead of being torn down with it, and leaves only by dismissal. Only the **loader
+test**'s request asks for one, through a `data-neo-loader-hold` attribute the control carries and
+the **ajax progress override** reads off the element that triggered the request; it is a
+mechanism internal to that control, not a surface a site may use. _Avoid:_ "the sticky loader",
+"the persistent overlay", "the paused loader".
+
+**Dismissal hint** — the line a **held overlay** always shows saying how to dismiss it. It is not
+the ajax message and does not follow the hide-ajax-message setting, because the case that needs
+it most is the one where no message is shown. _Avoid:_ "the close message", "the overlay message"
+(that is the ajax message).
 
 ## Settings in effect
 
