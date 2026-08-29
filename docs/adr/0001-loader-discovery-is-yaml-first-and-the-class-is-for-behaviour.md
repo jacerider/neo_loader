@@ -31,10 +31,21 @@ dragged into library discovery on every cache rebuild.
   roughly thirty sites. A grep found no `@Loader` plugin outside this module on the planning site,
   which is one site's evidence about everyone's extension point.
 
-**Cost.** The annotation spelling of the plugin type, `getCssFile()`, `setCssFile()` and the base
-class's `$path` are deprecated rather than removed: the release adding YAML discovery changes
+**Cost.** `getLabel()` and the `$label` it read are removed outright rather than deprecated,
+which the rest of this paragraph does not do and which is deliberate: the method read
+`$this->configuration['label']`, nothing ever populated that key, and so every call it could
+ever have received would have returned NULL. Nothing in the module called it and no caller was
+found on the planning site. A deprecation cycle for a method that cannot have worked buys a
+release of nothing; a third party who somehow called it was already getting NULL and gets a
+fatal instead, which is the more honest of the two answers. The rest is kept: the annotation
+spelling of the plugin type, `getCssFile()`, `setCssFile()` and the base class's `$path` are
+deprecated rather than removed: the release adding YAML discovery changes
 nothing a third-party loader relies on, and the removals wait for a later one, once sites are known
 to be clear. A loader declared by an extension other than `neo_loader` needs its **derived
 stylesheet** expressed root-relative, because the **loader library** it lands in is owned by
 `neo_loader`; that adaptation lives at the one place libraries are emitted, so the derivation rule
 stays a single sentence about the declaring extension.
+
+**Release.** The `@deprecated` tags this decision adds name `neo_loader:1.1.0`, so the release
+carrying it is cut **minor** — `pkg release neo_loader minor`. Cut as a patch, every notice
+names a version that deprecated nothing.

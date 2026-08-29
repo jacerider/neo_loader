@@ -25,9 +25,12 @@ computed rather than fixed — in this module, exactly one, the icon loader that
 annotation" (the annotation form is the retained legacy spelling of the same thing).
 
 **Default loader class** — the plugin class the **loader manager** gives every **loader
-declaration**, whose markup is the declaration's own. Nothing declares it and no declaration
-may override it; a loader that needs a different class is a **loader plugin** instead.
-_Avoid:_ "the YAML plugin class", "the fallback plugin".
+declaration** that names none, whose markup is the declaration's own. It is the default of the
+declaration's optional `class` key, not a fixed answer: a declaration may name another class
+and the **derived stylesheet** rule still applies to it. Nothing shipped here names one — a
+loader that needs real behaviour is written as a **loader plugin** instead — so the default is
+what every one of the eleven declarations gets. _Avoid:_ "the YAML plugin class", "the
+fallback plugin".
 
 **Derived stylesheet** — the stylesheet a **loader** gets when it declares none: the path
 `src/css/loader/{id}.css` inside the declaring extension, with the id's underscores written
