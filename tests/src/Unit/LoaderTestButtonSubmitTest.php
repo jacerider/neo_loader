@@ -130,7 +130,6 @@ final class LoaderTestButtonSubmitTest extends UnitTestCase {
       'Drupal\neo_loader\LoaderManagerInterface',
       'Drupal\neo_settings\Plugin\SettingsBase',
       'Symfony\Component\DependencyInjection\ContainerInterface',
-      'Symfony\Component\HttpFoundation\RequestStack',
     ], $matches[1], 'The settings plugin gained or lost an import.');
   }
 

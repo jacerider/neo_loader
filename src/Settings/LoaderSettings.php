@@ -10,7 +10,6 @@ use Drupal\Core\Routing\AdminContext;
 use Drupal\neo_loader\LoaderManagerInterface;
 use Drupal\neo_settings\Plugin\SettingsBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Module settings.
@@ -37,13 +36,6 @@ final class LoaderSettings extends SettingsBase {
   protected $loaderManager;
 
   /**
-   * The request.
-   *
-   * @var \Symfony\Component\HttpFoundation\Request|null
-   */
-  protected $request;
-
-  /**
    * The admin context.
    *
    * @var \Drupal\Core\Routing\AdminContext
@@ -52,6 +44,16 @@ final class LoaderSettings extends SettingsBase {
 
   /**
    * {@inheritdoc}
+   *
+   * The loader manager and the admin context are required rather than
+   * optional, which phpstan's consistent-constructor rule objects to. They are
+   * required because nothing is optional about them: `create()` passes both
+   * every time, the settings manager builds every settings plugin through the
+   * container factory, and this class is final, so no subclass can arrive with
+   * a different constructor. Spelling them optional only moved a type error
+   * that named the parameter into a null dereference that named nothing.
+   *
+   * @phpstan-ignore parameter.notOptional, parameter.notOptional
    */
   public function __construct(
     array $configuration,
@@ -59,13 +61,11 @@ final class LoaderSettings extends SettingsBase {
     $plugin_definition,
     MessengerInterface $messenger,
     FormBuilderInterface $form_builder,
-    ?LoaderManagerInterface $loader_manager = NULL,
-    ?RequestStack $request_stack = NULL,
-    ?AdminContext $admin_context = NULL,
+    LoaderManagerInterface $loader_manager,
+    AdminContext $admin_context,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $messenger, $form_builder);
     $this->loaderManager = $loader_manager;
-    $this->request = $request_stack->getCurrentRequest();
     $this->adminContext = $admin_context;
   }
 
@@ -80,7 +80,6 @@ final class LoaderSettings extends SettingsBase {
       $container->get('messenger'),
       $container->get('form_builder'),
       $container->get('plugin.manager.neo_loader'),
-      $container->get('request_stack'),
       $container->get('router.admin_context')
     );
   }
@@ -214,22 +213,23 @@ final class LoaderSettings extends SettingsBase {
   }
 
   /**
-   * {@inheritdoc}
+   * Determines whether the current route gets the loader attached to the page.
+   *
+   * No route is exempt, the loader settings page included: the loader test on
+   * that page shows the active loader through this very path, so exempting the
+   * page it lives on would leave it showing nothing. See ADR 0002. With no
+   * route object at all the admin context answers "not an admin route", so a
+   * request-less context — CLI, container warm-up — is applicable.
+   *
+   * @return bool
+   *   TRUE on every non-admin route, and on an admin route only when the
+   *   admin-paths setting is on. FALSE otherwise.
    */
   public function routeIsApplicable() {
-    $is_applicable = FALSE;
-    $is_admin_route = $this->adminContext->isAdminRoute();
-    $current_route_name = $this->request->attributes->get('_route');
-
-    if (!$is_admin_route) {
-      // Always applicable.
-      $is_applicable = TRUE;
+    if (!$this->adminContext->isAdminRoute()) {
+      return TRUE;
     }
-    elseif ($this->getValue('show_admin_paths') && $current_route_name != 'neo.loader') {
-      $is_applicable = TRUE;
-    }
-
-    return $is_applicable;
+    return (bool) $this->getValue('show_admin_paths');
   }
 
 }
