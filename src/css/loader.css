@@ -25,6 +25,18 @@
     min-width: 2.5rem; /* min-w-10 */
   }
 
+  /* The dismissal hint, shown only on a held overlay. It lives in the badge
+     rather than on the scrim because the badge docks in 0.3s while the scrim
+     is still a second away from starting to appear. */
+  .neo-loader-hint {
+    font-size: 0.625rem; /* text-2xs */
+    font-weight: bold; /* font-bold */
+    text-transform: uppercase; /* uppercase */
+    letter-spacing: 0.05em; /* tracking-wide */
+    line-height: 1; /* leading-none */
+    opacity: 0.75;
+  }
+
   &.neo-loader--type-icon {
     color: inherit; /* text-inherit */
     padding: inherit;
@@ -124,6 +136,17 @@
         transform: translateY(0);
         transition-duration: 0.3s;
       }
+    }
+  }
+
+  /* A held overlay waits on a person, not on a request, and clicking it is one
+     of the two ways out. The dismissal hint is the affordance; this only stops
+     the cursor from saying the opposite. */
+  &.ajax-progress-held {
+    cursor: pointer;
+
+    .neo-loader {
+      cursor: pointer;
     }
   }
 }

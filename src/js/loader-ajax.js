@@ -60,6 +60,14 @@
 
     /**
      * Sets the fullscreen progress indicator.
+     *
+     * An overlay whose request asked to hold it is marked as held once it is
+     * built. The request asks by carrying `data-neo-loader-hold` on the
+     * element that triggered it, which core's ajax object already holds; the
+     * attribute is a bare marker, so presence is the whole signal and it is
+     * read with hasAttribute() rather than by comparing a value. Only the
+     * loader test control carries it, so every other request on every page
+     * behaves exactly as it did before.
      */
     Drupal.Ajax.prototype.setProgressIndicatorFullscreenOriginal = Drupal.Ajax.prototype.setProgressIndicatorFullscreen;
     Drupal.Ajax.prototype.setProgressIndicatorFullscreen = function () {
@@ -68,6 +76,9 @@
       if (element) {
         $('body').addClass('ajax-loading');
         this.progress.element = $(element);
+        if (this.element instanceof Element && this.element.hasAttribute('data-neo-loader-hold')) {
+          Drupal.behaviors.neoLoader.hold(element);
+        }
       }
       else {
         Drupal.Ajax.prototype.setProgressIndicatorFullscreenOriginal.call(this);
@@ -87,12 +98,26 @@
      * A request that built no overlay hands over nothing, takes no overlay
      * away from anything else, and falls through to core's own success path.
      * That fallthrough is what makes the module degrade to core's behaviour on
-     * a page carrying no loader markup.
+     * a page carrying no loader markup — and it is why a held overlay is
+     * answered before teardown is asked anything. A held overlay is an overlay
+     * that exists and is being kept, not an absent one, and routing it through
+     * the fallthrough would put it on the path meant for a site with no loader
+     * markup at all.
      */
     Drupal.Ajax.prototype.successOriginal = Drupal.Ajax.prototype.success;
     Drupal.Ajax.prototype.success = function (response, status) {
       var _this = this;
       const overlay = this.progress && this.progress.element ? $(this.progress.element)[0] : null;
+      // A held request completes like any other — core's success path runs
+      // once, and the response is applied — but the overlay stays. Core's
+      // success removes whatever progress element it is handed, so the held
+      // one is detached from the ajax instance first; the body loading class
+      // stays with the overlay and leaves with it, at dismissal.
+      if (overlay && Drupal.behaviors.neoLoader.isHeld(overlay)) {
+        this.progress.element = null;
+        Drupal.Ajax.prototype.successOriginal.call(this, response, status);
+        return;
+      }
       const callback = function () {
         if (_this.progress.element) {
           _this.progress.element = null;
