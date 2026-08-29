@@ -4,7 +4,12 @@
     | 'fullscreen'
     | 'throbber';
 
-  let waitTimer:ReturnType<typeof setTimeout>|null = null;
+  // The pending reveal timer belongs to the overlay it will activate rather
+  // than to the behaviour. With more than one overlay on the page, clearing
+  // "the" timer cancels a reveal belonging to an overlay nobody asked to tear
+  // down. A WeakMap keeps the association off the DOM and lets an entry go
+  // when its overlay does.
+  const pendingReveals = new WeakMap<HTMLElement, ReturnType<typeof setTimeout>>();
 
   Drupal.behaviors.neoLoader = {
 
@@ -47,9 +52,10 @@
               }
               position.after(loader);
             }
-            waitTimer = setTimeout(() => {
+            pendingReveals.set(loader, setTimeout(() => {
+              pendingReveals.delete(loader);
               loader.classList.add('active');
-            }, delay);
+            }, delay));
             return loader;
           }
         }
@@ -57,12 +63,36 @@
       return null;
     },
 
-    hide: (callback:Function) => {
-      if (waitTimer) {
-        clearTimeout(waitTimer);
-      }
-      const loader = document.querySelector<HTMLElement>('.ajax-progress:not(.ajax-hiding)');
+    /**
+     * Takes an overlay off the page.
+     *
+     * @param callback
+     *   Invoked once the overlay has been taken down.
+     * @param element
+     *   The overlay to remove: the element a matching show() returned. A
+     *   caller that built an overlay hands its own back, so that teardown
+     *   removes the overlay belonging to that request rather than whichever
+     *   one the document happens to hold first. Omitting it falls back to the
+     *   document-wide lookup this behaviour has always used, which is what
+     *   callers predating the argument rely on.
+     *
+     * @return
+     *   The overlay that was taken down, or null when there was none to take
+     *   down.
+     */
+    hide: (callback:Function, element?:HTMLElement|null) => {
+      // An overlay already on its way out is not a target on either path: the
+      // lookup filters it out, and an element handed over a second time is a
+      // no-op rather than a second teardown.
+      const loader = element
+        ? (element.classList.contains('ajax-hiding') ? null : element)
+        : document.querySelector<HTMLElement>('.ajax-progress:not(.ajax-hiding)');
       if (loader) {
+        const pending = pendingReveals.get(loader);
+        if (pending) {
+          clearTimeout(pending);
+          pendingReveals.delete(loader);
+        }
         loader.classList.add('ajax-hiding');
         if (loader.classList.contains('active')) {
           loader.classList.remove('active');
