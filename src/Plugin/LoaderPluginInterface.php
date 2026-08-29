@@ -26,9 +26,4 @@ interface LoaderPluginInterface extends PluginInspectionInterface, DerivativeIns
    */
   public function getCssFile();
 
-  /**
-   * Returns human readable label.
-   */
-  public function getLabel();
-
 }

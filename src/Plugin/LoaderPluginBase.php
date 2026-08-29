@@ -42,13 +42,6 @@ abstract class LoaderPluginBase extends PluginBase implements LoaderPluginInterf
   protected $cssFile;
 
   /**
-   * The plugin label.
-   *
-   * @var string
-   */
-  protected $label;
-
-  /**
    * LoaderPluginBase constructor.
    *
    * @param array $configuration
@@ -94,16 +87,6 @@ abstract class LoaderPluginBase extends PluginBase implements LoaderPluginInterf
    */
   public function getCssFile() {
     return $this->cssFile;
-  }
-
-  /**
-   * Function to get label.
-   *
-   * @return mixed
-   *   Return the label.
-   */
-  public function getLabel() {
-    return $this->configuration['label'];
   }
 
   /**
