@@ -188,6 +188,15 @@ final class LoaderSettings extends SettingsBase {
       '#id' => 'neo-loader-test',
       '#attributes' => [
         'class' => ['btn btn-xs'],
+        // The one signal that crosses from this control to the ajax progress
+        // override, which reads it off the element that triggered the request
+        // and holds that overlay on screen instead of tearing it down when the
+        // response lands. Nothing else in the form carries it, so no other
+        // request is affected. It is deliberately not a documented affordance:
+        // the spelling matches the data-neo-loader-message / -type / -delay
+        // family as a convention only, and unlike those three it is read off
+        // the ajax instance rather than by the loader behaviour's click path.
+        'data-neo-loader-hold' => TRUE,
       ],
       '#ajax' => [
         'callback' => [__CLASS__, 'ajaxLoaderTest'],
