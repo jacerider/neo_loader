@@ -222,6 +222,70 @@ final class LoaderTestButtonHoldAttributeTest extends UnitTestCase {
   }
 
   /**
+   * Tests that dismissal leaves by the same exit teardown uses.
+   *
+   * The hold's whole purpose is to put the overlay in front of a person long
+   * enough to be looked at, which makes dismissal the one way out anybody
+   * watches -- every other overlay leaves while the reader is looking at the
+   * response instead. An overlay that animated in and was then cut out of the
+   * document in the tick the gesture arrived was the one place that showed.
+   *
+   * Both ways out now run the same exit, so this asserts the shared helper
+   * exists, that each way out calls it, and that neither removes the node
+   * itself -- a direct `.remove()` in either is how the two would drift apart
+   * again, and it is invisible to every other test here.
+   */
+  public function testTakesTheOverlayDownThroughTheSharedExitOnBothWaysOut(): void {
+    $source = (string) file_get_contents(__DIR__ . '/../../../src/js/loader.ts');
+
+    $this->assertStringContainsString(
+      'const runExit = (element:HTMLElement):void => {',
+      $source,
+      'The shared exit helper is gone, so the two ways out no longer share one.',
+    );
+
+    foreach (['dismissOverlay', 'hide'] as $way) {
+      $body = $this->wayOutBody($source, $way);
+      $this->assertMatchesRegularExpression(
+        '/runExit\(\w+\)/',
+        $body,
+        "The $way way out stopped running the shared exit, so an overlay it "
+        . 'takes down no longer animates away.',
+      );
+      $this->assertDoesNotMatchRegularExpression(
+        '/^\s*\w+\.remove\(\);/m',
+        $body,
+        "The $way way out removes the overlay itself again rather than "
+        . 'leaving it to the shared exit.',
+      );
+    }
+  }
+
+  /**
+   * Returns the body of one of the two ways an overlay leaves the page.
+   *
+   * @param string $source
+   *   The contents of the loader behaviour.
+   * @param string $way
+   *   Either the dismissal function or the teardown method.
+   *
+   * @return string
+   *   That function's body, to its closing brace at its own indentation.
+   */
+  private function wayOutBody(string $source, string $way): string {
+    $needles = [
+      'dismissOverlay' => 'const dismissOverlay = (element?:HTMLElement|null):HTMLElement|null => {',
+      'hide' => 'hide: (callback:Function, element?:HTMLElement|null) => {',
+    ];
+    $start = strpos($source, $needles[$way]);
+    $this->assertNotFalse($start, "The $way way out is no longer declared.");
+
+    $indent = $way === 'hide' ? '    ' : '  ';
+    $end = strpos($source, "\n$indent}", (int) $start);
+    return substr($source, (int) $start, (int) $end - (int) $start);
+  }
+
+  /**
    * Returns the body of one progress-indicator override.
    *
    * The two overrides are assigned onto the ajax prototype one after the

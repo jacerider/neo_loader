@@ -23,14 +23,56 @@
   // writes the entry and dismiss() is the only thing that clears it.
   const dismissals = new WeakMap<HTMLElement, () => void>();
 
+  // How long an overlay's exit is given before the node leaves. The stylesheet
+  // transitions the overlay and its badge at 0.2s and teardown has always cut
+  // that slightly short; the number is here rather than at the two call sites
+  // so the two ways out cannot drift apart again.
+  const EXIT_MS = 150;
+
+  /**
+   * Plays an overlay's exit and takes it off the page.
+   *
+   * Removing `active` is what runs the entrance transitions backwards, so an
+   * overlay that never reached `active` — one dismissed or torn down inside
+   * its own reveal delay — has nothing to play and goes at once. One that did
+   * is left in the document for the length of the exit.
+   *
+   * `ajax-hiding` marks it as already on its way out for the length of that
+   * wait, which is what stops either way out picking up an overlay whose exit
+   * is still running and removing it a second time.
+   *
+   * @param element
+   *   The overlay to take down.
+   */
+  const runExit = (element:HTMLElement):void => {
+    element.classList.add('ajax-hiding');
+    if (element.classList.contains('active')) {
+      element.classList.remove('active');
+      setTimeout(() => {
+        element.remove();
+      }, EXIT_MS);
+    }
+    else {
+      element.remove();
+    }
+  };
+
   /**
    * Takes a held overlay off the page and unbinds what was holding it.
    *
-   * Leaves the page as teardown would have left it: no overlay node, and no
-   * body loading class. That class is a single unrefcounted flag rather than a
-   * count of requests in flight, so an unrelated request completing during the
-   * hold has already removed it and removing it again here is a no-op; the
-   * overlay's own `cursor: wait` is what it costs to keep this simple.
+   * Leaves the page the way teardown would have left it, and by the same
+   * route: the overlay plays the exit `hide()` plays, through the shared
+   * runExit(), rather than being cut out of the document in the tick the
+   * gesture arrives. Dismissal is the one way out a person actually watches —
+   * every other overlay leaves while they are reading the response — so an
+   * overlay that animated in and then vanished instantly is the one place the
+   * difference shows.
+   *
+   * The body loading class goes at once rather than with the node, because it
+   * is a single unrefcounted flag rather than a count of requests in flight:
+   * an unrelated request completing during the hold has already removed it and
+   * removing it again here is a no-op. Holding it for the length of the exit
+   * would keep `cursor: wait` over a page that is no longer waiting.
    *
    * @param element
    *   The held overlay.
@@ -54,7 +96,7 @@
       pendingReveals.delete(element);
     }
     element.classList.remove(HELD);
-    element.remove();
+    runExit(element);
     document.body.classList.remove('ajax-loading');
     return element;
   };
@@ -230,16 +272,7 @@
           clearTimeout(pending);
           pendingReveals.delete(loader);
         }
-        loader.classList.add('ajax-hiding');
-        if (loader.classList.contains('active')) {
-          loader.classList.remove('active');
-          setTimeout(() => {
-            loader.remove();
-          }, 150);
-        }
-        else {
-          loader.remove();
-        }
+        runExit(loader);
         if (callback) {
           callback();
         }
