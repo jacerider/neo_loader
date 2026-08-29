@@ -2,17 +2,18 @@
 
 namespace Drupal\neo_loader\Plugin\Loader;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\neo_icon\IconTrait;
+use Drupal\neo_loader\Attribute\Loader;
 use Drupal\neo_loader\Plugin\LoaderPluginBase;
 
 /**
  * Provides the LoaderIcon.
- *
- * @Loader(
- *   id = "icon",
- *   label = @Translation("Icon")
- * )
  */
+#[Loader(
+  id: 'icon',
+  label: new TranslatableMarkup('Icon'),
+)]
 class LoaderIcon extends LoaderPluginBase {
 
   use IconTrait;

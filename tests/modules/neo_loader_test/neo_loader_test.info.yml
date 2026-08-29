@@ -1,0 +1,8 @@
+name: 'Neo Loader test'
+type: module
+description: 'Provides loader plugin fixtures for the neo_loader test suite.'
+package: Testing
+version: VERSION
+core_version_requirement: ^10.3 || ^11
+dependencies:
+  - neo_loader:neo_loader

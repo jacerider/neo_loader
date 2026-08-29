@@ -6,6 +6,9 @@ use Drupal\Component\Plugin\Mapper\MapperInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
+use Drupal\neo_loader\Annotation\Loader as LoaderAnnotation;
+use Drupal\neo_loader\Attribute\Loader as LoaderAttribute;
+use Drupal\neo_loader\Plugin\LoaderPluginInterface;
 
 /**
  * Gathers the loader plugins.
@@ -20,7 +23,10 @@ class LoaderManager extends DefaultPluginManager implements LoaderManagerInterfa
     CacheBackendInterface $cache_backend,
     ModuleHandlerInterface $module_handler,
   ) {
-    parent::__construct('Plugin/Loader', $namespaces, $module_handler, 'Drupal\neo_loader\Plugin\LoaderPluginInterface', 'Drupal\neo_loader\Annotation\Loader');
+    // Both spellings are declared, so discovery reads attributes first and
+    // annotations second and one definition set carries both. Declaring only
+    // the annotation is the shape core deprecated in 11.2 and removes in 12.
+    parent::__construct('Plugin/Loader', $namespaces, $module_handler, LoaderPluginInterface::class, LoaderAttribute::class, LoaderAnnotation::class);
     $this->alterInfo('neo_loader_info');
     $this->setCacheBackend($cache_backend, 'loader', ['loader']);
   }

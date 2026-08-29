@@ -20,6 +20,14 @@ use Drupal\neo_loader\LoaderManagerInterface;
  * `neo_settings.repository`, and `template_preprocess_neo_loader()` reads the
  * active settings on every call. `neo_loader`'s own config is installed
  * because the same function falls back to the stored `loader` and `color`.
+ *
+ * `neo_icon` is here because the icon loader's class uses `IconTrait`, and a
+ * kernel test enables exactly the modules it names — it does not resolve the
+ * dependency chain a site installs through. Core's attribute discovery drops
+ * a plugin whose class depends on a provider that is not installed, so
+ * without this the twelve loaders would be eleven in the fixture container
+ * and twelve everywhere else. Every real container has it: `neo_loader`
+ * requires `neo`, and `neo` requires `neo_icon`.
  */
 abstract class LoaderKernelTestBase extends KernelTestBase {
 
@@ -29,6 +37,7 @@ abstract class LoaderKernelTestBase extends KernelTestBase {
   protected static $modules = [
     'system',
     'neo_settings',
+    'neo_icon',
     'neo_loader',
   ];
 

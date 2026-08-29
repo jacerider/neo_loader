@@ -18,20 +18,15 @@ use PHPUnit\Framework\Attributes\Group;
  * whitespace change inside a throbber is a change to what a CSS selector binds
  * to.
  *
- * `neo_icon` is installed here and nowhere else in the suite: the icon loader
- * is the only shipped loader that computes its markup, and it computes it by
- * asking `neo_icon` for a spinner. That call also needs a render context,
- * which is why every preprocess call in this test runs inside one — outside a
- * context the renderer throws, and `IconElement`'s `__toString()` turns the
- * throw into a fatal.
+ * The icon loader is the only shipped loader that computes its markup, and it
+ * computes it by asking `neo_icon` for a spinner. That call needs a render
+ * context, which is why every preprocess call in this test runs inside one —
+ * outside a context the renderer throws, and `IconElement`'s `__toString()`
+ * turns the throw into a fatal. `neo_icon` itself is installed by the base
+ * class, for the reason given there.
  */
 #[Group('neo_loader')]
 final class LoaderPreprocessTest extends LoaderKernelTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  protected static $modules = ['neo_icon'];
 
   /**
    * Tests that every shipped loader's markup survives byte for byte.
