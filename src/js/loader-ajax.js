@@ -22,6 +22,32 @@
     }
 
     /**
+     * Holds an overlay when the request that built it asked to be held.
+     *
+     * The request asks by carrying `data-neo-loader-hold` on the element that
+     * triggered it, which core's ajax object already holds; the attribute is a
+     * bare marker, so presence is the whole signal and it is read with
+     * hasAttribute() rather than by comparing a value. Only the loader test
+     * control carries it, so every other request on every page is unaffected.
+     *
+     * It is asked on both progress-indicator paths because which one runs is
+     * decided by a site setting the request has no say in: with "Always show
+     * loader as overlay" off, a request that set no explicit progress type
+     * takes the throbber path instead of the fullscreen one. A hold that lived
+     * on only one path would be absent on those sites, and the control that
+     * asks for it would demonstrate its subject by removing it -- the defect
+     * the hold exists to fix.
+     *
+     * @param {Drupal.Ajax} ajax The ajax instance whose request built it.
+     * @param {HTMLElement} element The overlay a matching show() returned.
+     */
+    const holdIfRequested = function (ajax, element) {
+      if (ajax.element instanceof Element && ajax.element.hasAttribute('data-neo-loader-hold')) {
+        Drupal.behaviors.neoLoader.hold(element);
+      }
+    };
+
+    /**
      * Prepare the Ajax request before it is sent.
      *
      * @param {XMLHttpRequest} xmlhttprequest The xml httpprequest.
@@ -52,6 +78,7 @@
       if (element) {
         $('body').addClass('ajax-loading');
         this.progress.element = $(element);
+        holdIfRequested(this, element);
       }
       else {
         Drupal.Ajax.prototype.setProgressIndicatorThrobberOriginal.call(this);
@@ -62,12 +89,8 @@
      * Sets the fullscreen progress indicator.
      *
      * An overlay whose request asked to hold it is marked as held once it is
-     * built. The request asks by carrying `data-neo-loader-hold` on the
-     * element that triggered it, which core's ajax object already holds; the
-     * attribute is a bare marker, so presence is the whole signal and it is
-     * read with hasAttribute() rather than by comparing a value. Only the
-     * loader test control carries it, so every other request on every page
-     * behaves exactly as it did before.
+     * built -- see holdIfRequested(), which the throbber path above asks in
+     * exactly the same place and for the same reason.
      */
     Drupal.Ajax.prototype.setProgressIndicatorFullscreenOriginal = Drupal.Ajax.prototype.setProgressIndicatorFullscreen;
     Drupal.Ajax.prototype.setProgressIndicatorFullscreen = function () {
@@ -76,9 +99,7 @@
       if (element) {
         $('body').addClass('ajax-loading');
         this.progress.element = $(element);
-        if (this.element instanceof Element && this.element.hasAttribute('data-neo-loader-hold')) {
-          Drupal.behaviors.neoLoader.hold(element);
-        }
+        holdIfRequested(this, element);
       }
       else {
         Drupal.Ajax.prototype.setProgressIndicatorFullscreenOriginal.call(this);

@@ -181,6 +181,75 @@ final class LoaderTestButtonHoldAttributeTest extends UnitTestCase {
   }
 
   /**
+   * Tests that both progress-indicator paths ask for the hold.
+   *
+   * Which path runs is decided by a site setting the request has no say in.
+   * A request that names no explicit progress type reaches core's throbber
+   * indicator, and the override forwards that to its fullscreen one only while
+   * "Always show loader as overlay" is on -- the default, and what the site
+   * this was verified on stores. Turn the setting off and the same click takes
+   * the throbber path instead.
+   *
+   * So a hold read on the fullscreen path alone is absent exactly where the
+   * loader is least obtrusive and the demonstration is needed most, on every
+   * installing site whose administrator turned that setting off, and no test
+   * of the attribute or of the fullscreen path would say so. Both paths ask
+   * the same helper, and this asserts both still do.
+   */
+  public function testAsksForTheHoldOnBothProgressIndicatorPaths(): void {
+    $source = (string) file_get_contents(__DIR__ . '/../../../src/js/loader-ajax.js');
+
+    $paths = [
+      'setProgressIndicatorThrobber',
+      'setProgressIndicatorFullscreen',
+    ];
+    foreach ($paths as $path) {
+      $body = $this->progressIndicatorBody($source, $path);
+      $this->assertStringContainsString(
+        'holdIfRequested(this, element)',
+        $body,
+        "The $path override stopped asking for the hold, so a request that "
+        . 'asks to hold its overlay no longer does on that path.',
+      );
+    }
+
+    $this->assertStringContainsString(
+      "hasAttribute('data-neo-loader-hold')",
+      $source,
+      'The ajax override stopped reading the attribute the loader test '
+      . 'control carries, so nothing asks for the hold at all.',
+    );
+  }
+
+  /**
+   * Returns the body of one progress-indicator override.
+   *
+   * The two overrides are assigned onto the ajax prototype one after the
+   * other, so an override's body runs from its own assignment to the next
+   * assignment on that prototype, or to the end of the file for the last one.
+   *
+   * @param string $source
+   *   The contents of the ajax override script.
+   * @param string $method
+   *   The name of the overridden progress-indicator method.
+   *
+   * @return string
+   *   The body of that override.
+   */
+  private function progressIndicatorBody(string $source, string $method): string {
+    $start = strpos($source, "Drupal.Ajax.prototype.$method = function ()");
+    $this->assertNotFalse(
+      $start,
+      "The $method override is no longer assigned onto the ajax prototype.",
+    );
+
+    $end = strpos($source, 'Drupal.Ajax.prototype.', (int) $start + 1);
+    return $end === FALSE
+      ? substr($source, (int) $start)
+      : substr($source, (int) $start, $end - (int) $start);
+  }
+
+  /**
    * Tests that the settings plugin gains and loses no import.
    */
   public function testGainsAndLosesNoImportInTheSettingsPlugin(): void {
