@@ -28,7 +28,7 @@ dragged into library discovery on every cache rebuild.
   a class's job, and the sweeps keep arriving.
 - Move every loader to YAML and delete the plugin type — cleaner still, rejected on blast radius:
   the icon loader genuinely computes its markup, and the type is public in a package shipping to
-  roughly thirty sites. A grep found no `@Loader` plugin outside this module on the planning site,
+  every installing site. A grep found no `@Loader` plugin outside this module on the planning site,
   which is one site's evidence about everyone's extension point.
 
 **Cost.** `getLabel()` and the `$label` it read are removed outright rather than deprecated,
