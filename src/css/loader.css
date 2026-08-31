@@ -44,7 +44,12 @@
   }
 
   &.neo-loader--type-icon {
-    color: inherit; /* text-inherit */
+    /* Falls back to inherit only when no loader colour was configured: such a
+       loader gets no inline --loader-text at all, so the icon keeps taking the
+       surrounding text colour, which is the case this rider was written for.
+       Where a colour was configured the badge paints the chip, and inheriting
+       the page's text colour onto that chip is what was wrong. */
+    color: var(--loader-text, inherit);
     padding: inherit;
   }
 }
