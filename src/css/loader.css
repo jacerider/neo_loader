@@ -1,3 +1,9 @@
+/* --loader-bg and --loader-text are complete colours, not the bare `R G B`
+   triplets an early build subscriber once declared at :root. The theme hook
+   writes both inline on each .neo-loader element, so they are readable on that
+   element and nowhere else: an ancestor rule cannot pick either one up, and
+   wrapping one in rgb(... / ...) builds an invalid value that resolves to
+   nothing at all. Derive from them on the .neo-loader that carries them. */
 .neo-loader {
   display: inline-flex;
   cursor: wait;
@@ -66,13 +72,11 @@
     width: 100%;
     align-items: center;
     justify-content: center;
-    background-color: rgb(var(--loader-bg) / 0.5);
 
     .neo-loader {
       position: sticky;
       bottom: var(--displace-b, auto); /* bottom-displace-b */
       top: var(--displace-t, auto); /* top-displace-t */
-      background-color: transparent;
       padding: 0.5rem; /* p-2 */
     }
   }
