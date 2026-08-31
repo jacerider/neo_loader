@@ -84,24 +84,74 @@ document, on the first behaviour pass after core's ajax script has run. _Avoid:_
 patches", "the throbber override" (that names one of the five), "the ajax overrides" as a name for
 the library that carries them.
 
+## The two presentations
+
+**Loader presentation** — one of the two shapes the **ajax progress override** gives a **loader**:
+the **fullscreen overlay** or the **inline throbber**. Which one a request gets is decided by the
+`always_fullscreen` setting, not by the request. _Avoid:_ "the loader type", "the progress
+indicator", "loader mode".
+
+**Fullscreen overlay** — the **loader presentation** that covers the viewport: a scrim over the
+whole page with the **loader badge** docked at the top. _Avoid:_ "the overlay" unqualified, "the
+modal loader", "the full-page loader".
+
+**Inline throbber** — the **loader presentation** placed after its **throbber anchor**, covering
+that anchor's closest form item rather than the page — or standing on its own where the anchor has
+no form item to cover. It is what a site gets with "Always show loader as overlay" off, and it is
+sized to join a line of content rather than to be read across a room: the line box it lands in
+measures the same height with it as without. _Avoid:_ "the throbber" unqualified, "the small
+loader", "the in-place loader".
+
+**Throbber anchor** — the element the **ajax progress override** inserts an **inline throbber**
+after, and the origin of the form item that throbber covers: the closest
+`[data-drupal-ajax-container]` when the triggering element has one, and the triggering element
+otherwise. It is core's own rule, followed rather than reinvented, so a throbber never lands
+inside a dropbutton or a contextual-links placeholder. _Avoid:_ "the trigger" (that is the element
+whose request it is), "the insertion point", "the progress container".
+
+**Loader badge** — the rendered **loader** as it appears inside a **loader presentation**: its
+shapes, the ajax message and, on a **held overlay**, the **dismissal hint**, together on the
+**loader chip**. _Avoid:_ "the loader box", "the throbber" for it, "the badge" where the
+presentation is meant.
+
+**Loader chip** — the rounded background a **loader badge** paints from `--loader-bg`, and the
+surface its **loader contrast colour** is readable on. The two are a derived pair and hold only
+where one element carries both. See ADR 0006. _Avoid:_ "the pill", "the loader background", "the
+scrim" (that is the **fullscreen overlay**'s backdrop).
+
 ## The settings form
 
-**Loader preview** — the **active loader** rendered in place on the loader settings form, beside
-the throbber select, and re-rendered by ajax when the selection changes. It shows the loader's
-markup and nothing of the ajax progress path. _Avoid:_ "the test loader", "the sample", "the
-demo".
+**Loader gallery** — every declared **loader** rendered at once on the loader settings form,
+each on its own **loader chip** in the configured **loader colour** and each selectable in place,
+which is how the `loader` setting is chosen. It shows the loaders' markup and motion and nothing
+of the ajax progress path. _Avoid:_ "the loader preview" (the single active-loader render beside
+a select that it replaces), "the throbber select", "the picker", "the sample", "the demo".
 
-**Loader test** — the settings form's "Test loader" control, which fires a no-op ajax round trip
-so the **active loader** appears through the same progress-indicator path every ajax request on
-the site uses, as a **held overlay** rather than in place. _Avoid:_ "the preview", "the test
-button" used for the **loader preview**.
+**Gallery tile** — one **loader** in the **loader gallery**: the rendered loader on its chip,
+the loader's own label, and the radio that selects it, as one click target. _Avoid:_ "the gallery
+item", "the swatch", "the card", "the option".
 
-**Held overlay** — a fullscreen loader overlay that stays on screen after its request's response
-has landed, instead of being torn down with it, and leaves only by dismissal. Only the **loader
-test**'s request asks for one, through a `data-neo-loader-hold` attribute the control carries and
-the **ajax progress override** reads off the element that triggered the request; it is a
-mechanism internal to that control, not a surface a site may use. _Avoid:_ "the sticky loader",
-"the persistent overlay", "the paused loader".
+**Loader test** — the pair of controls on the settings form, one per **loader presentation**,
+each firing a no-op ajax round trip so the **active loader** appears through the same
+progress-indicator path every ajax request on the site uses, as a **held overlay**. Both reach
+their presentation whatever the `always_fullscreen` setting says: the overlay control through
+core's own ajax progress type, the inline one through a **presentation pin**. Neither saves
+anything. _Avoid:_ "the preview", "the test button" (there are two), "the test loader" used for
+the **loader gallery**.
+
+**Presentation pin** — the `data-neo-loader-presentation` attribute a control carries to choose
+the **loader presentation** for its own request regardless of the `always_fullscreen` setting,
+read off the triggering element by the **ajax progress override** exactly where the hold is read.
+Its values are `fullscreen` and `throbber`, the names the loader behaviour already takes. Like
+the hold it is internal to the **loader test**, not a surface a site may use. _Avoid:_ "the mode
+attribute", "the presentation override", "the fullscreen flag".
+
+**Held overlay** — a **loader presentation** that stays on screen after its request's response has
+landed, instead of being torn down with it, and leaves only by dismissal. Either presentation can
+be held. Only the **loader test**'s request asks for one, through a `data-neo-loader-hold`
+attribute the control carries and the **ajax progress override** reads off the element that
+triggered the request; it is a mechanism internal to that control, not a surface a site may use.
+_Avoid:_ "the sticky loader", "the persistent overlay", "the paused loader".
 
 **Dismissal hint** — the line a **held overlay** always shows saying how to dismiss it. It is not
 the ajax message and does not follow the hide-ajax-message setting, because the case that needs
@@ -122,13 +172,13 @@ from it. _Avoid:_ "the color setting" for the value, "the pallet", "the loader c
 
 **Loader contrast colour** — the readable colour paired with a **loader colour**, held in
 `neo_color`'s `--color-{pallet}-{shade}-content` token: the shade's own token name with
-`-content` appended. Every shipped loader but the icon paints its shapes with it; the icon
-loader inherits it as `color` from whatever encloses the loader. _Avoid:_ "the content colour",
-"the text colour", and `--color-{pallet}-content-{shade}`, which names no token `neo_color`
-emits.
+`-content` appended. Every shipped loader paints its shapes with it, the icon loader included —
+that one reads it as `color`, and inherits from whatever encloses the loader only where no
+**loader colour** was configured. _Avoid:_ "the content colour", "the text colour", and
+`--color-{pallet}-content-{shade}`, which names no token `neo_color` emits.
 
 **Loader colour properties** — `--loader-bg` and `--loader-text`, the two custom properties the
 `neo_loader` theme hook writes inline on each loader element from the **loader colour** and its
 **loader contrast colour**. They exist only on the elements that need them: nothing in the
-module declares either at `:root`. _Avoid:_ "the loader variables", "the CSS vars", "the inline
-style" as the name of the pair.
+module declares either at `:root`, so neither is readable from an ancestor. See ADR 0006.
+_Avoid:_ "the loader variables", "the CSS vars", "the inline style" as the name of the pair.
