@@ -1,0 +1,22 @@
+# Routes for the ajax-context fixture page.
+#
+# Deliberately not admin routes: the loader declines to attach on an admin
+# path unless "Use ajax loader on admin pages" is on, and a fixture that only
+# worked under a second setting would be a fixture with a footnote.
+neo_loader_test.ajax_contexts:
+  path: '/neo-loader-test/ajax-contexts'
+  defaults:
+    _controller: '\Drupal\neo_loader_test\Controller\AjaxContextsController::page'
+    _title: 'Neo loader ajax contexts'
+  requirements:
+    _permission: 'access content'
+
+# The endpoint the two link contexts request. Only they use it, so the
+# context is constrained to the two rather than to all five.
+neo_loader_test.ajax_context_respond:
+  path: '/neo-loader-test/ajax-contexts/respond/{context}'
+  defaults:
+    _controller: '\Drupal\neo_loader_test\Controller\AjaxContextsController::respond'
+  requirements:
+    _permission: 'access content'
+    context: 'dropbutton|text'
