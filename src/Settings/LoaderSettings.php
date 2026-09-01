@@ -115,10 +115,12 @@ final class LoaderSettings extends SettingsBase {
     ];
 
     // Each tile's loader container exists to supply one thing: a colour. The
-    // loader element inside it already carries its own inline --loader-text,
-    // which eleven of the twelve loaders paint their shapes with, so the only
-    // loader this container can reach is the icon loader — declared
-    // color: inherit, and so reading the enclosing colour and nothing else.
+    // loader element inside it carries its own inline --loader-text, and every
+    // shipped loader now paints its shapes from that, so this reaches none of
+    // them. It stays for the loaders nobody here has seen: a loader plugin a
+    // site declares itself may still paint from the colour it is given rather
+    // than from a custom property this module happens to write, and a form
+    // that renders a stranger's loader owes it a colour to read.
     //
     // The colour it inherits is the contrast colour neo_color emits for the
     // configured loader colour: that value's own token name with '-content'
@@ -131,25 +133,123 @@ final class LoaderSettings extends SettingsBase {
     // one declaration on the group would repaint the tile captions too, in a
     // colour chosen to be read on a near-black chip rather than on the admin
     // form's own surface.
+    //
+    // The padding beside it is the icon loader's chip. That loader declares
+    // `padding: inherit`, so the padding of this container is the only padding
+    // it can have, and a container with none leaves the one loader that cannot
+    // draw its own chip standing on the tile without one. Every other loader
+    // pads itself and is merely inset by this.
     $color = $this->getValue('color');
-    $attributes = [];
+    $loader_attributes = ['class' => ['p-3']];
     if ($color) {
-      $attributes['style'] = 'color: rgb(var(--color-' . $color . '-content));';
+      $loader_attributes['style'] =
+        'color: rgb(var(--color-' . $color . '-content));';
     }
+
+    // The tile: one loader, one caption and one click target, sized the same
+    // for every loader so that a row of them reads as a row. Every rule that
+    // shapes it is written out here as a Tailwind utility literal, because
+    // utilities are compiled from the literals a scan finds in its source and
+    // both themes scan this file. Nothing is added to the module's own
+    // stylesheet, which ships on every page of every installing site to style
+    // a form only an administrator ever opens.
+    //
+    // Tiles are inline blocks rather than grid cells because the element that
+    // would carry the grid — the wrapper the radios theme wrapper renders —
+    // takes no classes from this plugin. Equal boxes flowing into rows wrap on
+    // their own when the viewport narrows, which is the behaviour a grid would
+    // have had to be told.
+    $tile = [
+      'relative',
+      'inline-block',
+      'align-top',
+      'm-1',
+      // The theme lays radio options out as a stacked list and trims the
+      // outermost margins of that stack. Tiles are a wrapping row instead, and
+      // a first tile 4px shallower than the one beside it is a row that does
+      // not line up, so both trims are put back.
+      'first:mt-1',
+      'last:mb-1',
+      'h-40',
+      'w-40',
+      'rounded-md',
+      'border',
+      'border-base-200',
+      'p-2',
+      'transition-colors',
+      'hover:border-base-400',
+      // The current choice is drawn from the checked state of the tile's own
+      // input, so showing it involves no JavaScript at all.
+      'has-[:checked]:border-primary',
+      'has-[:checked]:bg-primary/10',
+      'has-[:checked]:ring-2',
+      'has-[:checked]:ring-primary',
+    ];
+
+    // The three parts of a tile are all taken out of flow, so that the tile is
+    // the size declared above rather than the sum of whatever the form element
+    // template wraps around each of them. The chip is pinned to the top and
+    // centred; the label is stretched over the whole tile, holding its caption
+    // at the bottom, which is what makes a pointer click anywhere on the tile
+    // select that loader while the accessible name stays the loader's own
+    // label; and the radio sits in the corner above the label, where it keeps
+    // its own focus ring and stays directly clickable.
+    //
+    // The font size is on the chip's outer container rather than on the one
+    // carrying the colour, because that inner container is the loader's own
+    // parent and may declare nothing but the colour it exists to pass down.
+    // The icon loader takes its size from whatever encloses it, and the theme
+    // sizes a field prefix for a line of text rather than for a throbber, so
+    // without this the one loader drawn from a font is a fraction of the size
+    // of the eleven drawn from boxes.
+    $chip = [
+      'absolute',
+      'inset-x-0',
+      'top-0',
+      'flex',
+      'justify-center',
+      'text-3xl',
+    ];
+    $caption = [
+      'absolute',
+      'inset-0',
+      'flex',
+      'items-end',
+      'justify-center',
+      // Balances the padding the theme's own radio label carries on the other
+      // side, so that a centred caption is actually centred.
+      'pr-1.5',
+      'text-center',
+      'leading-tight',
+    ];
+    $radio = [
+      'absolute',
+      'left-0',
+      'top-0',
+      'z-10',
+    ];
 
     // The rendered loader is the option's own field prefix, so that it belongs
     // to that option's form element rather than to separate markup the form
     // would have to keep aligned with it. Radios::processRadios() fills in
     // everything else each option needs and leaves what is declared here
-    // alone.
+    // alone — including the option's own attributes, which it would otherwise
+    // copy from the group onto every radio input.
     foreach (array_keys($form['loader']['#options']) as $id) {
+      $form['loader'][$id]['#wrapper_attributes'] = ['class' => $tile];
+      $form['loader'][$id]['#label_attributes'] = ['class' => $caption];
+      $form['loader'][$id]['#attributes'] = ['class' => $radio];
       $form['loader'][$id]['#field_prefix'] = [
         '#type' => 'container',
-        '#attributes' => $attributes,
-        'loader' => [
-          '#theme' => 'neo_loader',
-          '#loader' => (string) $id,
-          '#title' => '',
+        '#attributes' => ['class' => $chip],
+        'color' => [
+          '#type' => 'container',
+          '#attributes' => $loader_attributes,
+          'loader' => [
+            '#theme' => 'neo_loader',
+            '#loader' => (string) $id,
+            '#title' => '',
+          ],
         ],
       ];
     }
