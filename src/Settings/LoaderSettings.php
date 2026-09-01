@@ -171,30 +171,51 @@ final class LoaderSettings extends SettingsBase {
       // not line up, so both trims are put back.
       'first:mt-1',
       'last:mb-1',
-      'h-40',
-      'w-40',
-      'rounded-md',
+      // Taller than it is wide by the depth of the caption band, so that the
+      // area left for the chip is square. The width is what the longest label
+      // shipped here needs on one line; the height is that width plus the band
+      // the caption is held in.
+      'h-42',
+      'w-44',
+      'cursor-pointer',
+      'rounded-xl',
       'border',
       'border-base-200',
-      'p-2',
-      'transition-colors',
-      'hover:border-base-400',
+      // A surface of its own, one step off the form's. The chips are dark
+      // plates and a tile that is the same colour as the page leaves them
+      // floating on it rather than sitting on a card.
+      'bg-base-50',
+      'transition',
+      'hover:border-base-300',
+      'hover:shadow-md',
       // The current choice is drawn from the checked state of the tile's own
-      // input, so showing it involves no JavaScript at all.
+      // input, so showing it involves no JavaScript at all. The ring is one
+      // pixel rather than two and the tint a twentieth rather than a tenth:
+      // the border already carries the colour, and doubling it turned the one
+      // selected tile into the loudest thing on the page.
       'has-[:checked]:border-primary',
-      'has-[:checked]:bg-primary/10',
-      'has-[:checked]:ring-2',
+      'has-[:checked]:bg-primary/5',
+      'has-[:checked]:ring-1',
       'has-[:checked]:ring-primary',
+      'has-[:checked]:shadow-md',
     ];
 
     // The three parts of a tile are all taken out of flow, so that the tile is
     // the size declared above rather than the sum of whatever the form element
-    // template wraps around each of them. The chip is pinned to the top and
-    // centred; the label is stretched over the whole tile, holding its caption
-    // at the bottom, which is what makes a pointer click anywhere on the tile
-    // select that loader while the accessible name stays the loader's own
-    // label; and the radio sits in the corner above the label, where it keeps
-    // its own focus ring and stays directly clickable.
+    // template wraps around each of them. The chip is centred in the area
+    // above the caption; the label is stretched over the whole tile, holding
+    // its caption at the bottom, which is what makes a pointer click anywhere
+    // on the tile select that loader while the accessible name stays the
+    // loader's own label; and the radio sits inset from the tile's top left
+    // corner, where it keeps its own focus ring and stays directly clickable.
+    //
+    // The chip's box stops short of the tile's own bottom edge rather than
+    // filling it, and centres what it holds in what is left. Chips are not all
+    // one size — the shipped loaders draw plates between 84 and 104 pixels
+    // deep — so a box pinned to the top hangs the taller ones lower than the
+    // rest and a row of them stops reading as a row. Centring in a fixed box
+    // aligns them on their middles, which is the only line every chip has in
+    // common.
     //
     // The font size is on the chip's outer container rather than on the one
     // carrying the colour, because that inner container is the loader's own
@@ -207,7 +228,9 @@ final class LoaderSettings extends SettingsBase {
       'absolute',
       'inset-x-0',
       'top-0',
+      'bottom-10',
       'flex',
+      'items-center',
       'justify-center',
       'text-3xl',
     ];
@@ -220,13 +243,21 @@ final class LoaderSettings extends SettingsBase {
       // Balances the padding the theme's own radio label carries on the other
       // side, so that a centred caption is actually centred.
       'pr-1.5',
+      // Lifts the caption off the tile's bottom border. Without it the words
+      // sit on the border, which is the one place in a card they should never
+      // be.
+      'pb-3',
       'text-center',
       'leading-tight',
     ];
+    // Inset by the corner radius, so that the control reads as placed in the
+    // tile rather than pinned to the join of two borders. Nothing collides
+    // with it: the widest chip shipped here is 104 pixels in a 174 pixel box,
+    // which leaves 35 either side to the radio's 32.
     $radio = [
       'absolute',
-      'left-0',
-      'top-0',
+      'left-3',
+      'top-3',
       'z-10',
     ];
 
