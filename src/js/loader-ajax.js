@@ -64,6 +64,26 @@
 
     /**
      * Overrides the throbber progress indicator.
+     *
+     * The throbber is inserted after the same anchor core would have used:
+     * the closest `[data-drupal-ajax-container]` when the triggering element
+     * sits inside one, and the triggering element otherwise. Core ships that
+     * attribute on dropbuttons and on contextual-links placeholders, and a
+     * badge inserted after the element rather than after the wrapper lands
+     * inside one -- inside a dropbutton's own list item. Following core's
+     * opt-in rather than reinventing one means anything already carrying the
+     * attribute, contrib and custom markup included, gets the placement it
+     * asked core for.
+     *
+     * The anchor is what show() is handed, so the form item the badge covers
+     * is resolved from the anchor rather than from the trigger: one origin for
+     * both questions, and a badge inserted after a wrapper never covers
+     * something that wrapper sits inside.
+     *
+     * The fullscreen path resolves no anchor: it appends to `body` and has no
+     * trigger to sit beside.
+     *
+     * @see Drupal.Ajax.prototype.setProgressIndicatorThrobber in misc/ajax.js
      */
     Drupal.Ajax.prototype.progressTimer = 0;
     Drupal.Ajax.prototype.setProgressIndicatorThrobberOriginal = Drupal.Ajax.prototype.setProgressIndicatorThrobber;
@@ -73,8 +93,9 @@
         return;
       }
 
+      const anchor = $(this.element).closest('[data-drupal-ajax-container]')[0] || this.element;
       const message = this.progress.message && !drupalSettings.neoLoader?.hideAjaxMessage ? this.progress.message : null;
-      const element = Drupal.behaviors.neoLoader.show(message, 'throbber', this.element);
+      const element = Drupal.behaviors.neoLoader.show(message, 'throbber', anchor);
       if (element) {
         $('body').addClass('ajax-loading');
         this.progress.element = $(element);
