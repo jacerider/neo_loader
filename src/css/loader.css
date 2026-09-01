@@ -12,7 +12,11 @@
   justify-content: center;
   gap: 0.75rem; /* gap-3 */
   border-radius: 0.5rem; /* rounded-lg */
-  padding: 0.75rem; /* p-3 */
+  /* p-3 unless a presentation asks for less. It is a custom property rather
+     than a padding a presentation overrides, so that the icon loader's
+     `padding: inherit` below -- which ADR 0006 left alone on purpose -- keeps
+     outranking it wherever the chip is resized. */
+  padding: var(--neo-loader-chip-padding, 0.75rem);
   font-size: 0.75rem; /* text-xs */
   background-color: var(--loader-bg, inherit);
   color: var(--loader-text, inherit);
@@ -55,12 +59,47 @@
 }
 
 .ajax-progress {
+  /* The inline throbber is text-scaled: 1.125rem shapes, which is Claro's
+     18px -- the number core arrived at for this job in these contexts -- in a
+     chip trimmed to suit. The fullscreen overlay further down keeps 2rem
+     shapes, and the pair is deliberate rather than drift: this presentation
+     shares a line with content and has a line box to respect, that one is
+     centred on a scrim with nothing to respect, and the two are never on
+     screen together. */
   &.ajax-progress-throbber {
+    /* A flex container rather than the inline-block core styles it as. An
+       inline-block carries a text strut as tall as the line-height it
+       inherits, so the badge could never be shorter than the line it is meant
+       to sit inside -- and a badge exactly as tall as the line, aligned to the
+       middle of it, still grows it. A flex container has no strut and is
+       exactly as tall as the badge. */
+    display: inline-flex;
+    /* Core pads this box 1px above and 2px below, which is room its own
+       background-image throbber needs and height a badge that brings its own
+       chip cannot spend: the box has to measure the badge and nothing else or
+       the line grows by the difference. Core's 5px each side is kept -- it is
+       the gap between the badge and the words either side of it. */
+    padding-block: 0;
+    /* Two of the three properties Claro spends on keeping the line box the
+       height it was without the throbber in it, and for the same reason. The
+       third, a negative block margin, is on the chip below. */
+    vertical-align: middle;
+    white-space: nowrap;
+    --neo-loader-chip-padding: 0.125rem 0.375rem; /* py-0.5 px-1.5 */
     opacity: 0;
     transition: opacity 0.2s;
 
     .neo-loader {
       flex-direction: row;
+      gap: 0.375rem; /* gap-1.5 */
+      /* Claro's negative block margin. The chip is taller than the shapes it
+         holds, and this is what stops that difference reaching the line. */
+      margin-block: -0.125rem; /* -my-0.5 */
+    }
+
+    .neo-loader-style {
+      height: 1.125rem; /* h-4.5 */
+      min-width: 1.125rem; /* min-w-4.5 */
     }
 
     &.active {
@@ -78,11 +117,14 @@
     align-items: center;
     justify-content: center;
 
+    /* No chip padding of its own. What covers a form item is an inline
+       throbber as much as what stands beside one, so it takes the same
+       text-scaled chip, and a badge that fits a checkbox's form item fits
+       every larger one. */
     .neo-loader {
       position: sticky;
       bottom: var(--displace-b, auto); /* bottom-displace-b */
       top: var(--displace-t, auto); /* top-displace-t */
-      padding: 0.5rem; /* p-2 */
     }
   }
 
@@ -126,6 +168,12 @@
       border-top-right-radius: 0;
       transition: transform 0.2s;
 
+      /* 2rem, not the inline throbber's 1.125rem, and the difference is the
+         point rather than an oversight: this badge is docked to the top of a
+         full-page scrim with no line box to hold and nothing to fit inside,
+         so it is sized to be read across the page. Shrinking it to match the
+         inline throbber would cost legibility to buy a consistency nobody can
+         see, since the two presentations never appear together. */
       .neo-loader-style {
         height: 2rem; /* h-8 */
         min-width: 2rem; /* min-w-8 */
