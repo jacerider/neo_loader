@@ -2,6 +2,7 @@
 
 namespace Drupal\neo_loader\Settings;
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
@@ -291,12 +292,37 @@ final class LoaderSettings extends SettingsBase {
       '#default_value' => $this->getValue('color'),
     ];
 
+    // The loader test: one control per loader presentation, keyed by the
+    // presentation it produces. Comparing presentations is the same problem as
+    // comparing loaders, and a mode selector on a single button would make it
+    // serial in exactly the way the gallery above has stopped being. Two
+    // buttons put either presentation one click away instead, whatever the
+    // always_fullscreen setting says.
+    //
+    // The pair carries one description naming the presentation the current
+    // always_fullscreen value produces, because two equal buttons otherwise
+    // leave the setting's own effect unstated: both work whatever it says, so
+    // nothing on the form would tell a reader which of the two tests is the
+    // live one. It sits on the pair rather than on a control, where it would
+    // read as that control's own description.
     $form['test'] = [
+      '#type' => 'item',
+      '#description' => $this->getValue('always_fullscreen')
+        ? $this->t('Ajax requests currently produce the fullscreen overlay, so the overlay test is the live one. Both tests work whatever the overlay setting says.')
+        : $this->t('Ajax requests currently produce the inline throbber, so the inline test is the live one. Both tests work whatever the overlay setting says.'),
+    ];
+
+    $form['test']['fullscreen'] = [
       '#type' => 'submit',
-      '#value' => $this->t('Test loader'),
+      '#value' => $this->t('Test fullscreen overlay'),
+      // Naming the empty handler here is what replaces the settings form's own
+      // submit handlers for this click: core runs the triggering element's
+      // handlers when it has any and the form's own only when it has none. A
+      // control that omits it is a save button, which is the whole distance
+      // between testing a presentation and writing always_fullscreen.
       '#submit' => [[__CLASS__, 'submitLoaderSubmit']],
       '#limit_validation_errors' => [],
-      '#id' => 'neo-loader-test',
+      '#id' => 'neo-loader-test-fullscreen',
       '#attributes' => [
         'class' => ['btn btn-xs'],
         // The one signal that crosses from this control to the ajax progress
@@ -311,7 +337,54 @@ final class LoaderSettings extends SettingsBase {
       ],
       '#ajax' => [
         'callback' => [__CLASS__, 'ajaxLoaderTest'],
-        'wrapper' => 'neo-loader-test',
+        'wrapper' => 'neo-loader-test-fullscreen',
+        // The whole of this control's mechanism. Core turns a declared
+        // progress type into a call to the matching setProgressIndicator*
+        // method, so 'fullscreen' is dispatched straight to the overridden
+        // fullscreen path -- a path that never consults always_fullscreen.
+        // That is why the overlay is reachable on a site that has turned the
+        // setting off, with no new mechanism on this side at all.
+        'progress' => ['type' => 'fullscreen'],
+      ],
+    ];
+
+    $form['test']['throbber'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Test inline throbber'),
+      // The same handler and the same reason as the control above: naming it
+      // is what stops this click saving the form.
+      '#submit' => [[__CLASS__, 'submitLoaderSubmit']],
+      '#limit_validation_errors' => [],
+      '#id' => 'neo-loader-test-throbber',
+      '#attributes' => [
+        'class' => ['btn btn-xs'],
+        // The hold, on this control for the reason it is on the one above: a
+        // test that is not held is not readable, in either presentation.
+        'data-neo-loader-hold' => TRUE,
+        // The other half of this control's mechanism, and the only new signal
+        // this pair introduces: the ajax progress override reads it off the
+        // triggering element -- exactly where and how it reads the hold -- and
+        // skips its redirect to the fullscreen path. Without it the throbber
+        // path is unreachable on a site running the shipped default, which is
+        // the whole reason this control exists.
+        //
+        // It rides on the element rather than in the ajax options because ADR
+        // 0005 settled that question for the hold: an options-borne signal is
+        // invisible to anything inspecting the page and matches none of the
+        // data-neo-loader-* vocabulary already read off elements. Its values
+        // are the presentation names show() already takes rather than a third
+        // spelling of the same two things. Like the hold it is internal to
+        // this control, not a surface a site may use.
+        'data-neo-loader-presentation' => 'throbber',
+      ],
+      '#ajax' => [
+        'callback' => [__CLASS__, 'ajaxLoaderTest'],
+        'wrapper' => 'neo-loader-test-throbber',
+        // Half of this control's mechanism: it reaches the overridden throbber
+        // path rather than being left to whatever core's default type would
+        // resolve to. That path does consult always_fullscreen, so the other
+        // half is the presentation pin in this control's attributes.
+        'progress' => ['type' => 'throbber'],
       ],
     ];
 
@@ -319,23 +392,39 @@ final class LoaderSettings extends SettingsBase {
   }
 
   /**
-   * Submit handler for the loader test button.
+   * Submit handler for the loader test controls.
    *
    * The body must stay empty and the handler must stay declared. Naming it in
-   * the button's '#submit' array is what replaces the settings form's own
+   * each control's '#submit' array is what replaces the settings form's own
    * submit handlers for that click, so an empty body is the only thing
-   * stopping a test of the loader from saving the form. Give this method work
-   * to do, or delete it and let the form's own handlers run, and "Test loader"
-   * becomes a save button.
+   * stopping a test of a presentation from saving the form. Give this method
+   * work to do, or delete it and let the form's own handlers run, and either
+   * control becomes a save button.
    */
   public static function submitLoaderSubmit(array &$form, FormStateInterface $form_state) {
   }
 
   /**
-   * Ajax handler for the test loader button.
+   * Ajax handler for the loader test controls.
+   *
+   * The control that was clicked, resolved from the form state, rather than a
+   * fixed key path: there are two controls now, and a fixed path would answer
+   * for the wrong one half the time -- replacing the button the reader did not
+   * press with the response to the one they did.
+   *
+   * @param array $form
+   *   The settings form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state, which carries the element that triggered the request.
+   *
+   * @return array
+   *   The clicked control.
    */
   public static function ajaxLoaderTest(array &$form, FormStateInterface $form_state) {
-    return $form['instance']['test'];
+    return NestedArray::getValue(
+      $form,
+      $form_state->getTriggeringElement()['#array_parents'],
+    );
   }
 
   /**

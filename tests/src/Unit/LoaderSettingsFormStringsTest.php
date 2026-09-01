@@ -36,10 +36,18 @@ use PHPUnit\Framework\Attributes\Group;
  * collaborators left are the loader manager double and the values array.
  *
  * The form builder runs lines this test does not own: the gallery tiles and
- * the colour arithmetic behind them, and the loader test button and its ajax
- * callback. Nothing here asserts about any of them. Every assertion is confined
- * to the titles and descriptions of the loader gallery, the three checkboxes
- * and the loader-position textfield — which is exactly the ten strings.
+ * the colour arithmetic behind them, and the loader test controls' ids,
+ * attributes, handlers and ajax definitions. Nothing here asserts about any of
+ * them. Every assertion is confined to the titles and descriptions of the
+ * loader gallery, the three checkboxes and the loader-position textfield —
+ * which is exactly the ten strings — plus the three the loader test adds: a
+ * label per control and the pair's own description.
+ *
+ * Elements claim their own properties rather than sharing one list, because a
+ * button's label is its '#value' and the pair carries a description under no
+ * title at all. The pair's description follows the always_fullscreen value, so
+ * the string claimed for it is the one the fixture's value produces; that it
+ * follows the setting at all is LoaderTestPairDescriptionTest's.
  */
 #[Group('neo_loader')]
 final class LoaderSettingsFormStringsTest extends UnitTestCase {
@@ -55,15 +63,6 @@ final class LoaderSettingsFormStringsTest extends UnitTestCase {
   private const MARKER = 'translated-by-the-injected-service:';
 
   /**
-   * The element properties every claimed element carries.
-   *
-   * The fixture holds each expected string under the same name without its
-   * hash, so that phpcs does not read a table of expected strings as a form
-   * element that forgot to translate its own description.
-   */
-  private const PROPERTIES = ['#title', '#description'];
-
-  /**
    * Tests that it builds the settings form with no global container set.
    */
   public function testBuildsTheSettingsFormWithNoGlobalContainerSet(): void {
@@ -76,11 +75,11 @@ final class LoaderSettingsFormStringsTest extends UnitTestCase {
 
     foreach ($this->claimedElements() as $label => $claimed) {
       $element = $this->elementAt($form, $claimed['parents'], $label);
-      foreach (self::PROPERTIES as $property) {
+      foreach (array_keys($claimed['strings']) as $property) {
         $this->assertNotSame(
           '',
-          (string) $element[$property],
-          'The ' . $property . ' of ' . $label . ' resolved to nothing.',
+          (string) $element['#' . $property],
+          'The #' . $property . ' of ' . $label . ' resolved to nothing.',
         );
       }
     }
@@ -99,11 +98,11 @@ final class LoaderSettingsFormStringsTest extends UnitTestCase {
 
     foreach ($this->claimedElements() as $label => $claimed) {
       $element = $this->elementAt($form, $claimed['parents'], $label);
-      foreach (self::PROPERTIES as $property) {
+      foreach ($claimed['strings'] as $property => $expected) {
         $this->assertSame(
-          self::MARKER . $claimed[ltrim($property, '#')],
-          (string) $element[$property],
-          'The ' . $property . ' of ' . $label
+          self::MARKER . $expected,
+          (string) $element['#' . $property],
+          'The #' . $property . ' of ' . $label
           . ' did not resolve through the translation service the plugin holds.',
         );
       }
@@ -118,27 +117,27 @@ final class LoaderSettingsFormStringsTest extends UnitTestCase {
 
     foreach ($this->claimedElements() as $label => $claimed) {
       $element = $this->elementAt($form, $claimed['parents'], $label);
-      foreach (self::PROPERTIES as $property) {
-        $markup = $element[$property];
+      foreach ($claimed['strings'] as $property => $expected) {
+        $markup = $element['#' . $property];
         $this->assertInstanceOf(
           TranslatableMarkup::class,
           $markup,
-          'The ' . $property . ' of ' . $label . ' is not translatable markup.',
+          'The #' . $property . ' of ' . $label . ' is not translatable markup.',
         );
         $this->assertSame(
-          $claimed[ltrim($property, '#')],
+          $expected,
           (string) $markup,
-          'The ' . $property . ' of ' . $label . ' changed its text.',
+          'The #' . $property . ' of ' . $label . ' changed its text.',
         );
         $this->assertSame(
           [],
           $markup->getArguments(),
-          'The ' . $property . ' of ' . $label . ' gained a placeholder.',
+          'The #' . $property . ' of ' . $label . ' gained a placeholder.',
         );
         $this->assertSame(
           [],
           $markup->getOptions(),
-          'The ' . $property . ' of ' . $label . ' gained an option.',
+          'The #' . $property . ' of ' . $label . ' gained an option.',
         );
       }
     }
@@ -239,41 +238,73 @@ final class LoaderSettingsFormStringsTest extends UnitTestCase {
   /**
    * Returns the elements this plan claims, with the strings they carry.
    *
-   * The loader gallery, the three checkboxes and the loader-position
-   * textfield — the ten strings the global t() built, and nothing else. The
-   * colour element, the gallery tiles and the loader test button are all
-   * built by the same method and are all left alone here.
+   * The loader gallery, the three checkboxes and the loader-position textfield
+   * — the ten strings the global t() built — and the loader test's own three:
+   * a label per control and the pair's description. The colour element and the
+   * gallery tiles are built by the same method and are left alone here.
+   *
+   * Each expected string is held under its property name without the hash, so
+   * that phpcs does not read a table of expected strings as a form element
+   * that forgot to translate its own description.
    *
    * @return array
-   *   Each claimed element's key path and its expected title and description,
-   *   keyed by how to name it in a failure message.
+   *   Each claimed element's key path and the strings it carries, keyed by
+   *   property name, keyed in turn by how to name it in a failure message.
    */
   private function claimedElements(): array {
     return [
       'the loader gallery' => [
         'parents' => ['loader'],
-        'title' => 'Throbber',
-        'description' => 'Choose your loader',
+        'strings' => [
+          'title' => 'Throbber',
+          'description' => 'Choose your loader',
+        ],
       ],
       'the hide-ajax-message checkbox' => [
         'parents' => ['hide_ajax_message'],
-        'title' => 'Never show ajax loading message',
-        'description' => 'Choose whether you want to hide the loading ajax message even when it is set.',
+        'strings' => [
+          'title' => 'Never show ajax loading message',
+          'description' => 'Choose whether you want to hide the loading ajax message even when it is set.',
+        ],
       ],
       'the always-fullscreen checkbox' => [
         'parents' => ['always_fullscreen'],
-        'title' => 'Always show loader as overlay (fullscreen)',
-        'description' => 'Choose whether you want to show the loader as an overlay, no matter what the settings of the loader are.',
+        'strings' => [
+          'title' => 'Always show loader as overlay (fullscreen)',
+          'description' => 'Choose whether you want to show the loader as an overlay, no matter what the settings of the loader are.',
+        ],
       ],
       'the admin-paths checkbox' => [
         'parents' => ['show_admin_paths'],
-        'title' => 'Use ajax loader on admin pages',
-        'description' => 'Choose whether you also want to show the loader on admin pages or still like to use the default core loader.',
+        'strings' => [
+          'title' => 'Use ajax loader on admin pages',
+          'description' => 'Choose whether you also want to show the loader on admin pages or still like to use the default core loader.',
+        ],
       ],
       'the loader-position textfield' => [
         'parents' => ['loader_position'],
-        'title' => 'Loader position',
-        'description' => 'Allows you to change the position where the loader is inserted. A valid css selector must be used here. The default value is: body',
+        'strings' => [
+          'title' => 'Loader position',
+          'description' => 'Allows you to change the position where the loader is inserted. A valid css selector must be used here. The default value is: body',
+        ],
+      ],
+      'the loader test pair' => [
+        'parents' => ['test'],
+        'strings' => [
+          'description' => 'Ajax requests currently produce the inline throbber, so the inline test is the live one. Both tests work whatever the overlay setting says.',
+        ],
+      ],
+      'the overlay test control' => [
+        'parents' => ['test', 'fullscreen'],
+        'strings' => [
+          'value' => 'Test fullscreen overlay',
+        ],
+      ],
+      'the inline test control' => [
+        'parents' => ['test', 'throbber'],
+        'strings' => [
+          'value' => 'Test inline throbber',
+        ],
       ],
     ];
   }
