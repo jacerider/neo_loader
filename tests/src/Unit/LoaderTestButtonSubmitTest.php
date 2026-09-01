@@ -122,7 +122,6 @@ final class LoaderTestButtonSubmitTest extends UnitTestCase {
     );
 
     $this->assertSame([
-      'Drupal\Component\Utility\NestedArray',
       'Drupal\Core\Form\FormBuilderInterface',
       'Drupal\Core\Form\FormStateInterface',
       'Drupal\Core\Messenger\MessengerInterface',

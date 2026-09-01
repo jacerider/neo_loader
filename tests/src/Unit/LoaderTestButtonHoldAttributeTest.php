@@ -41,11 +41,10 @@ use PHPUnit\Framework\Attributes\Group;
  * The seam is the one the sibling tests use: the settings plugin is
  * constructible from doubles with no container at all, and the protected form
  * builder is reached by reflection and asserted against directly. The colour
- * arithmetic, the loader preview, the throbber select and its ajax, the three
- * checkboxes and the position textfield are all built by the same method and
- * none of them is read here — except by the confinement check, which reads
- * every element in the form precisely to prove the attribute reached none of
- * them.
+ * arithmetic, the loader gallery and its tiles, the three checkboxes and the
+ * position textfield are all built by the same method and none of them is read
+ * here — except by the confinement check, which reads every element in the
+ * form precisely to prove the attribute reached none of them.
  */
 #[Group('neo_loader')]
 final class LoaderTestButtonHoldAttributeTest extends UnitTestCase {
@@ -325,7 +324,6 @@ final class LoaderTestButtonHoldAttributeTest extends UnitTestCase {
     );
 
     $this->assertSame([
-      'Drupal\Component\Utility\NestedArray',
       'Drupal\Core\Form\FormBuilderInterface',
       'Drupal\Core\Form\FormStateInterface',
       'Drupal\Core\Messenger\MessengerInterface',

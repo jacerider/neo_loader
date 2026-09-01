@@ -35,10 +35,10 @@ use PHPUnit\Framework\Attributes\Group;
  * The base class's own form builder returns the form unchanged, so the only
  * collaborators left are the loader manager double and the values array.
  *
- * The form builder runs lines this test does not own: the loader preview and
- * the colour arithmetic above it, and the loader test button and its ajax
+ * The form builder runs lines this test does not own: the gallery tiles and
+ * the colour arithmetic behind them, and the loader test button and its ajax
  * callback. Nothing here asserts about any of them. Every assertion is confined
- * to the titles and descriptions of the throbber select, the three checkboxes
+ * to the titles and descriptions of the loader gallery, the three checkboxes
  * and the loader-position textfield — which is exactly the ten strings.
  */
 #[Group('neo_loader')]
@@ -239,9 +239,9 @@ final class LoaderSettingsFormStringsTest extends UnitTestCase {
   /**
    * Returns the elements this plan claims, with the strings they carry.
    *
-   * The throbber select, the three checkboxes and the loader-position
+   * The loader gallery, the three checkboxes and the loader-position
    * textfield — the ten strings the global t() built, and nothing else. The
-   * colour element, the loader preview and the loader test button are all
+   * colour element, the gallery tiles and the loader test button are all
    * built by the same method and are all left alone here.
    *
    * @return array
@@ -250,8 +250,8 @@ final class LoaderSettingsFormStringsTest extends UnitTestCase {
    */
   private function claimedElements(): array {
     return [
-      'the throbber select' => [
-        'parents' => ['wrapper', 'loader'],
+      'the loader gallery' => [
+        'parents' => ['loader'],
         'title' => 'Throbber',
         'description' => 'Choose your loader',
       ],

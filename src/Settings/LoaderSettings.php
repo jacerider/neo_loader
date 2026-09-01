@@ -2,7 +2,6 @@
 
 namespace Drupal\neo_loader\Settings;
 
-use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
@@ -94,34 +93,32 @@ final class LoaderSettings extends SettingsBase {
   protected function buildForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildForm($form, $form_state);
 
-    $form['wrapper'] = [
-      '#prefix' => '<div id="loader-wrapper">',
-      '#suffix' => '</div>',
-      '#parents' => $form['#parents'],
-    ];
-
-    $form['wrapper']['loader'] = [
-      '#type' => 'select',
+    // The loader gallery: every declared loader rendered at once, each one
+    // selectable in place. The options are the manager's own list in the
+    // manager's own order — it sorts by label already, across declared and
+    // class-based loaders alike, and re-sorting here would only disagree with
+    // it. The library is attached rather than inherited: it does reach this
+    // page today, because core's ajax library is made to depend on the ajax
+    // override which depends on it, but a form that renders loaders should not
+    // be styled only because another control on it happens to bring core's
+    // ajax along.
+    $form['loader'] = [
+      '#type' => 'radios',
       '#title' => $this->t('Throbber'),
       '#description' => $this->t('Choose your loader'),
       '#required' => TRUE,
       '#options' => $this->loaderManager->getLoaderOptionList(),
       '#default_value' => $this->getValue('loader'),
-      '#ajax' => [
-        'wrapper' => 'loader-wrapper',
-        'callback' => [__CLASS__, 'ajaxLoaderChange'],
-        'progress' => [
-          'type' => 'throbber',
-          'message' => $this->t('Switching loader...'),
-        ],
+      '#attached' => [
+        'library' => ['neo_loader/loader'],
       ],
     ];
 
-    // The preview wrapper exists to supply one thing: a colour. The loader
-    // element inside it already carries its own inline --loader-text, which
-    // eleven of the twelve loaders paint their shapes with, so the only loader
-    // this wrapper can reach is the icon loader — declared color: inherit, and
-    // so reading the enclosing colour and nothing else.
+    // Each tile's loader container exists to supply one thing: a colour. The
+    // loader element inside it already carries its own inline --loader-text,
+    // which eleven of the twelve loaders paint their shapes with, so the only
+    // loader this container can reach is the icon loader — declared
+    // color: inherit, and so reading the enclosing colour and nothing else.
     //
     // The colour it inherits is the contrast colour neo_color emits for the
     // configured loader colour: that value's own token name with '-content'
@@ -129,19 +126,33 @@ final class LoaderSettings extends SettingsBase {
     // spells it. It is written as an inline declaration rather than as a
     // utility class because utilities are compiled from literals found in
     // scanned source, and a class assembled in PHP is not one.
+    //
+    // It goes on each tile rather than on the gallery because color inherits:
+    // one declaration on the group would repaint the tile captions too, in a
+    // colour chosen to be read on a near-black chip rather than on the admin
+    // form's own surface.
     $color = $this->getValue('color');
-    $form['wrapper']['preview'] = [
-      '#type' => 'container',
-      '#attributes' => [],
-    ];
+    $attributes = [];
     if ($color) {
-      $form['wrapper']['preview']['#attributes']['style'] = 'color: rgb(var(--color-' . $color . '-content));';
+      $attributes['style'] = 'color: rgb(var(--color-' . $color . '-content));';
     }
-    $form['wrapper']['preview']['loader'] = [
-      '#theme' => 'neo_loader',
-      '#loader' => $this->getValue('loader'),
-      '#title' => '',
-    ];
+
+    // The rendered loader is the option's own field prefix, so that it belongs
+    // to that option's form element rather than to separate markup the form
+    // would have to keep aligned with it. Radios::processRadios() fills in
+    // everything else each option needs and leaves what is declared here
+    // alone.
+    foreach (array_keys($form['loader']['#options']) as $id) {
+      $form['loader'][$id]['#field_prefix'] = [
+        '#type' => 'container',
+        '#attributes' => $attributes,
+        'loader' => [
+          '#theme' => 'neo_loader',
+          '#loader' => (string) $id,
+          '#title' => '',
+        ],
+      ];
+    }
 
     $form['hide_ajax_message'] = [
       '#type' => 'checkbox',
@@ -225,14 +236,6 @@ final class LoaderSettings extends SettingsBase {
    */
   public static function ajaxLoaderTest(array &$form, FormStateInterface $form_state) {
     return $form['instance']['test'];
-  }
-
-  /**
-   * Ajax callback when loader is changed.
-   */
-  public static function ajaxLoaderChange(array $form, FormStateInterface $form_state) {
-    $trigger = $form_state->getTriggeringElement();
-    return NestedArray::getValue($form, array_slice($trigger['#array_parents'], 0, -1));
   }
 
   /**
