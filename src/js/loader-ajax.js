@@ -48,6 +48,30 @@
     };
 
     /**
+     * Whether the request being sent pinned the named presentation.
+     *
+     * The request pins one by carrying `data-neo-loader-presentation` on the
+     * element that triggered it -- the same element the hold is read off, read
+     * the same way and for the same reason: a signal on the element is visible
+     * to anything inspecting the page and joins the `data-neo-loader-*`
+     * vocabulary already read off elements, which is what ADR 0005 settled for
+     * the hold. Unlike the hold it carries a value, because it names one of
+     * two presentations rather than asserting a single fact, and its values
+     * are the names show() already takes.
+     *
+     * Only the loader test's inline control carries it, so no other request on
+     * any page consults it and none changes behaviour.
+     *
+     * @param {Drupal.Ajax} ajax The ajax instance whose request built it.
+     * @param {string} presentation The presentation to test for.
+     *
+     * @return {boolean} True when the triggering element pinned it.
+     */
+    const pinsPresentation = function (ajax, presentation) {
+      return ajax.element instanceof Element && ajax.element.getAttribute('data-neo-loader-presentation') === presentation;
+    };
+
+    /**
      * Prepare the Ajax request before it is sent.
      *
      * @param {XMLHttpRequest} xmlhttprequest The xml httpprequest.
@@ -83,12 +107,19 @@
      * The fullscreen path resolves no anchor: it appends to `body` and has no
      * trigger to sit beside.
      *
+     * This is the one path that consults "Always show loader as overlay", so
+     * it is the one path a request can pin its way past: a request pinning
+     * `throbber` keeps the throbber whatever the setting says, and a request
+     * that pins nothing -- every request on every page but the loader test's
+     * inline control -- takes the redirect exactly as before. The fullscreen
+     * path below consults no setting and so needs no equivalent.
+     *
      * @see Drupal.Ajax.prototype.setProgressIndicatorThrobber in misc/ajax.js
      */
     Drupal.Ajax.prototype.progressTimer = 0;
     Drupal.Ajax.prototype.setProgressIndicatorThrobberOriginal = Drupal.Ajax.prototype.setProgressIndicatorThrobber;
     Drupal.Ajax.prototype.setProgressIndicatorThrobber = function () {
-      if (drupalSettings.neoLoader?.alwaysFullscreen !== false) {
+      if (drupalSettings.neoLoader?.alwaysFullscreen !== false && !pinsPresentation(this, 'throbber')) {
         this.setProgressIndicatorFullscreen();
         return;
       }
@@ -164,10 +195,6 @@
         if (_this.progress.element) {
           _this.progress.element = null;
         }
-        // var closest = $(_this.progress.element).closest('.ajax-progress-wrapper');
-        // if (closest.length) {
-        //   closest.removeClass('ajax-progress-wrapper');
-        // }
         $('body').removeClass('ajax-loading');
         Drupal.Ajax.prototype.successOriginal.call(_this, response, status);
       }

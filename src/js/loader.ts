@@ -11,6 +11,17 @@
   // when its overlay does.
   const pendingReveals = new WeakMap<HTMLElement, ReturnType<typeof setTimeout>>();
 
+  // The element the throbber branch of show() marked with
+  // `ajax-progress-wrapper`, remembered against the overlay that marked it.
+  // The class positions that overlay over the element it covers, so it is the
+  // overlay's own and has to leave when the overlay does; nothing used to
+  // remove it, which was a cosmetic leak while the path lasted seventy
+  // milliseconds and is a permanent one now the loader test holds it on
+  // screen. Keeping the association here rather than on the DOM is the idiom
+  // pendingReveals and dismissals already use, and it is what stops one
+  // request's cleanup reaching for an element it did not mark.
+  const wrappers = new WeakMap<HTMLElement, Element>();
+
   // Marks an overlay whose request asked for it to stay on screen after the
   // response landed. It is the whole of the hold: teardown skips an overlay
   // carrying it, and only dismissal takes one off the page.
@@ -30,6 +41,33 @@
   const EXIT_MS = 150;
 
   /**
+   * Gives back the element an overlay marked as its wrapper.
+   *
+   * Called once the overlay has left the document, not when its exit begins:
+   * the class is what holds the overlay over the element it covers, so
+   * removing it any earlier drops the overlay back into the line for the
+   * length of its own exit.
+   *
+   * The class only goes when nothing is left inside that needs it. Two
+   * requests in one form item resolve to the same wrapper -- the closest form
+   * ancestor is one element for every trigger in a form -- and the first to
+   * finish would otherwise pull the class out from under the second's overlay,
+   * which is the cross-request reach remembering the element was meant to
+   * prevent. The overlay asking has already been removed, so the lookup sees
+   * only the others.
+   *
+   * @param element
+   *   The overlay that has gone.
+   */
+  const releaseWrapper = (element:HTMLElement):void => {
+    const wrapper = wrappers.get(element);
+    wrappers.delete(element);
+    if (wrapper && !wrapper.querySelector('.ajax-progress')) {
+      wrapper.classList.remove('ajax-progress-wrapper');
+    }
+  };
+
+  /**
    * Plays an overlay's exit and takes it off the page.
    *
    * Removing `active` is what runs the entrance transitions backwards, so an
@@ -41,19 +79,25 @@
    * wait, which is what stops either way out picking up an overlay whose exit
    * is still running and removing it a second time.
    *
+   * Both ways out come through here, which is why the wrapper class an inline
+   * overlay left on the element it covered is given back here too: dismissal
+   * and ordinary teardown then clean up identically, and neither can forget.
+   *
    * @param element
    *   The overlay to take down.
    */
   const runExit = (element:HTMLElement):void => {
+    const drop = () => {
+      element.remove();
+      releaseWrapper(element);
+    };
     element.classList.add('ajax-hiding');
     if (element.classList.contains('active')) {
       element.classList.remove('active');
-      setTimeout(() => {
-        element.remove();
-      }, EXIT_MS);
+      setTimeout(drop, EXIT_MS);
     }
     else {
-      element.remove();
+      drop();
     }
   };
 
@@ -139,6 +183,9 @@
               let closest = position.closest('.js-form-item, form');
               if (closest) {
                 closest.classList.add('ajax-progress-wrapper');
+                // Remembered against this overlay so the class leaves with it
+                // and with no other overlay -- see releaseWrapper().
+                wrappers.set(loader, closest);
               }
               position.after(loader);
             }
