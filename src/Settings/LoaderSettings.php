@@ -171,11 +171,11 @@ final class LoaderSettings extends SettingsBase {
       // not line up, so both trims are put back.
       'first:mt-1',
       'last:mb-1',
-      // Taller than it is wide by the depth of the caption band, so that the
-      // area left for the chip is square. The width is what the longest label
-      // shipped here needs on one line; the height is that width plus the band
-      // the caption is held in.
-      'h-42',
+      // The width is what holds the longest label shipped here on one line
+      // and still fits six tiles across the form; the height is the deepest
+      // chip plus the band the caption is held in and nothing more, because
+      // every pixel beyond that is read as a gap between the two.
+      'h-34',
       'w-44',
       'cursor-pointer',
       'rounded-xl',
@@ -209,13 +209,18 @@ final class LoaderSettings extends SettingsBase {
     // loader's own label; and the radio sits inset from the tile's top left
     // corner, where it keeps its own focus ring and stays directly clickable.
     //
-    // The chip's box stops short of the tile's own bottom edge rather than
-    // filling it, and centres what it holds in what is left. Chips are not all
-    // one size — the shipped loaders draw plates between 84 and 104 pixels
-    // deep — so a box pinned to the top hangs the taller ones lower than the
-    // rest and a row of them stops reading as a row. Centring in a fixed box
-    // aligns them on their middles, which is the only line every chip has in
-    // common.
+    // The chip's box stops short of the tile's own bottom edge by the depth of
+    // the caption band, and sits what it holds on the floor of what is left.
+    // Chips are not all one size — the shipped loaders draw plates between 84
+    // and 104 pixels deep — so a box that pinned them to its top, or centred
+    // them in it, would leave each one a different distance above its own
+    // caption. Standing them on a shared floor puts every plate the same
+    // distance above the words naming it, and spends the difference in size
+    // upwards, into the empty half of the tile where nothing reads it.
+    //
+    // The floor itself is not the box's edge: each chip carries the padding
+    // below, so the plate stops twelve pixels short of it. That padding is the
+    // gap, and the box is trimmed so that nothing is added to it.
     //
     // The font size is on the chip's outer container rather than on the one
     // carrying the colour, because that inner container is the loader's own
@@ -228,9 +233,9 @@ final class LoaderSettings extends SettingsBase {
       'absolute',
       'inset-x-0',
       'top-0',
-      'bottom-10',
+      'bottom-8',
       'flex',
-      'items-center',
+      'items-end',
       'justify-center',
       'text-3xl',
     ];
@@ -248,6 +253,12 @@ final class LoaderSettings extends SettingsBase {
       // be.
       'pb-3',
       'text-center',
+      // A caption, not a form label: the theme sizes radio labels for a line
+      // of prose in a stacked list, which is a size too loud for a word naming
+      // the picture above it. Important because the size it is overriding is
+      // written into form-element-label--type-radio.html.twig, on an element
+      // this plugin adds classes to but cannot take them off.
+      'text-sm!',
       'leading-tight',
     ];
     // Inset by the corner radius, so that the control reads as placed in the
